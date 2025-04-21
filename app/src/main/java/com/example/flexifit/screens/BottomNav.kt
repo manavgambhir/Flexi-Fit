@@ -3,7 +3,7 @@ package com.example.flexifit.screens
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -26,11 +26,15 @@ import com.example.flexifit.navigation.Routes
 fun BottomNav(navController: NavHostController) {
     val navController1 = rememberNavController()
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    // Get current route
+    val currentRoute = navController1.currentBackStackEntryAsState().value?.destination?.route
     Scaffold(modifier = Modifier
         .fillMaxSize()
         .nestedScroll(scrollBehavior.nestedScrollConnection),
              topBar = {
-                 CustomAppBar(scrollBehavior)
+                 CustomAppBar(scrollBehavior = scrollBehavior,
+                              currentRoute = currentRoute,
+                              navController = navController1)
              },
              bottomBar = { MyBottomBar(navController1) }
     ) { innerPadding->
@@ -60,11 +64,40 @@ fun BottomNav(navController: NavHostController) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CustomAppBar(scrollBehavior: TopAppBarScrollBehavior) {
+fun CustomAppBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    currentRoute: String?,
+    navController: NavHostController
+) {
+    val title = when (currentRoute) {
+        Routes.Diet.routes -> "Choose Your Diet Plan"
+        Routes.Gym.routes -> "Gym Workouts"
+        Routes.Yoga.routes -> "Yoga Sessions"
+        else -> "FlexiFit"
+    }
+
+    // Show back button if not on home screen
+    val showBackButton = currentRoute != Routes.Diet.routes
+
     LargeTopAppBar(
         modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        title = { Text(text = "Choose Your Diet Plan", fontSize = 30.sp, fontWeight = FontWeight.Bold) },
-//        navigationIcon = { Icon(imageVector = Icons.Default.Close, contentDescription = "")},
+        title = {
+            Text(
+                text = title,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+            )
+        },
+        navigationIcon = {
+            if (showBackButton) {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back"
+                    )
+                }
+            }
+        },
         scrollBehavior = scrollBehavior
     )
 }
