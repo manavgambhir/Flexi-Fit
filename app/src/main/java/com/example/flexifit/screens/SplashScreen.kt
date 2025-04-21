@@ -16,7 +16,7 @@ fun SplashScreen(navController: NavHostController){
     LaunchedEffect(true) {
         delay(2000)
         navController.navigate(Routes.BottomNav.routes){
-            popUpTo(navController.graph.startDestinationId)
+            popUpTo(0) { inclusive = true } // Clear splash from backstack
             launchSingleTop = true
         }
     }

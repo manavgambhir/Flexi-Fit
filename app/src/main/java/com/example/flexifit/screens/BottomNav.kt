@@ -1,14 +1,16 @@
 package com.example.flexifit.screens
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.rounded.*
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Icon
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -19,12 +21,19 @@ import androidx.navigation.compose.rememberNavController
 import com.example.flexifit.data.models.BottomNavItem
 import com.example.flexifit.navigation.Routes
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomNav(navController: NavHostController) {
     val navController1 = rememberNavController()
-    Scaffold(bottomBar = {
-        MyBottomBar(navController1)
-    }) { innerPadding->
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    Scaffold(modifier = Modifier
+        .fillMaxSize()
+        .nestedScroll(scrollBehavior.nestedScrollConnection),
+             topBar = {
+                 CustomAppBar(scrollBehavior)
+             },
+             bottomBar = { MyBottomBar(navController1) }
+    ) { innerPadding->
         NavHost(
             navController = navController1,
             startDestination = Routes.Diet.routes,
@@ -47,6 +56,17 @@ fun BottomNav(navController: NavHostController) {
 //            }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomAppBar(scrollBehavior: TopAppBarScrollBehavior) {
+    LargeTopAppBar(
+        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        title = { Text(text = "Choose Your Diet Plan", fontSize = 30.sp, fontWeight = FontWeight.Bold) },
+//        navigationIcon = { Icon(imageVector = Icons.Default.Close, contentDescription = "")},
+        scrollBehavior = scrollBehavior
+    )
 }
 
 @Composable
