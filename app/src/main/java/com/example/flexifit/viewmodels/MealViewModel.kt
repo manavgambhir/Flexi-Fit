@@ -26,7 +26,7 @@ class MealViewModel : ViewModel() {
                     _mealPlanResult.postValue(response)
                 }
             } catch (e:Exception){
-                Log.e("MealViewModel", "Error fetching meal plan", e)
+                Log.e("MealVMError", "Error fetching meal plan", e)
             }
         }
     }

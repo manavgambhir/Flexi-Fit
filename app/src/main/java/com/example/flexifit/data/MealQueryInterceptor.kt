@@ -1,4 +1,4 @@
-package com.example.flexifit
+package com.example.flexifit.data
 
 import okhttp3.*
 
@@ -16,7 +16,9 @@ class MealQueryInterceptor:Interceptor {
 
         val newRequest = original.newBuilder()
             .url(newUrl)
-            .addHeader("Edamam-Account-User", "manavgambhir")
+            .header("Edamam-Account-User","manavgambhir")
+            .header("accept", "application/json")
+            .addHeader("Accept-Language","en")
             .build()
 
         return chain.proceed(newRequest)

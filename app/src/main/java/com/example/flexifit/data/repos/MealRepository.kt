@@ -4,7 +4,7 @@ import com.example.flexifit.data.api.MealClient
 import com.example.flexifit.data.models.MealModel
 
 class MealRepository {
-    val api = MealClient.api
+    private val api = MealClient.api
 
     suspend fun getMealPlan(
         q: String,

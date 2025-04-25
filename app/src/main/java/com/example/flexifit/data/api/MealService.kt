@@ -3,9 +3,7 @@ package com.example.flexifit.data.api
 
 import com.example.flexifit.data.models.MealModel
 import retrofit2.Response
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface MealService {
     @GET("/api/recipes/v2")
@@ -14,6 +12,6 @@ interface MealService {
 //        @Query("diet") diet:String,
         @Query("health") health:String,
         @Query("mealType") mealType:String,
-        @Query("calories") calories:String
+        @Query("calories") calories:String,
     ): Response<MealModel>
 }

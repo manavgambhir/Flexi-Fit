@@ -1,6 +1,6 @@
 package com.example.flexifit.data.api
 
-import com.example.flexifit.MealQueryInterceptor
+import com.example.flexifit.data.MealQueryInterceptor
 import com.google.gson.*
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

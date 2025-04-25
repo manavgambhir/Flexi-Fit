@@ -1,19 +1,17 @@
 package com.example.flexifit.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.example.flexifit.data.models.DietType
 import com.example.flexifit.R
 import com.example.flexifit.itemView.DietTypeItem
+import com.example.flexifit.viewmodels.MealViewModel
 
 val DietTypeList = listOf(
     DietType(R.drawable.gluton_free, "Gluten Free"),
@@ -36,6 +34,13 @@ val DietTypeList = listOf(
 @Composable
 //navController: NavHostController
 fun DietScreen(navController: NavHostController){
+    val mealViewModel = MealViewModel()
+    LaunchedEffect(Unit){
+        mealViewModel.getMealPlan("spinach","vegetarian","breakfast","100-700")
+    }
+    val itemlist by mealViewModel.mealPlanResult.observeAsState(null)
+    Log.d("DietScreen", "itemlist: $itemlist")
+
     Box(modifier = Modifier.fillMaxSize()) {
         DietTypeList()
     }
