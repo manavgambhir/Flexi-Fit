@@ -1,7 +1,6 @@
 package com.example.flexifit.itemView
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -36,10 +35,10 @@ import com.example.flexifit.data.models.DietType
 //Shell
 
 @Composable
-fun DietTypeItem(dietType: DietType){
+fun DietTypeItem(dietType: DietType, onClick: () -> Unit){
     Card(modifier = Modifier.padding(8.dp)
         .width(180.dp)
-        .height(220.dp),
+        .height(220.dp).clickable { onClick() },
          elevation = CardDefaults.cardElevation(6.dp)
     ) {
         Box(modifier = Modifier.fillMaxSize()){
