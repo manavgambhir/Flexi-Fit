@@ -15,44 +15,28 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.flexifit.data.models.DietType
 import com.example.flexifit.R
 import com.example.flexifit.itemView.DietTypeItem
-
-val DietTypeList = listOf(
-    DietType(R.drawable.gluton_free, "Gluten Free"),
-    DietType(R.drawable.gluton_free, "Keto-Friendly"),
-    DietType(R.drawable.gluton_free, "Vegan"),
-    DietType(R.drawable.gluton_free, "Vegetarian"),
-    DietType(R.drawable.gluton_free, "Peanut Free"),
-    DietType(R.drawable.gluton_free, "Fish Free"),
-    DietType(R.drawable.gluton_free, "Sugar Free"),
-    DietType(R.drawable.gluton_free, "Dairy Free"),
-    DietType(R.drawable.gluton_free, "Egg Free"),
-    DietType(R.drawable.gluton_free, "Immuno-Supportive"),
-    DietType(R.drawable.gluton_free, "Kidney Friendly"),
-    DietType(R.drawable.gluton_free, "Low Sugar"),
-    DietType(R.drawable.gluton_free, "Mustard Free"),
-    DietType(R.drawable.gluton_free, "No Oil Added"),
-    DietType(R.drawable.gluton_free, "Shellfish Free"),
-)
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 //navController: NavHostController
 fun DietScreen(navController: NavHostController){
     lateinit var type:String
-    lateinit var bfastIngredient:String
-    var bfastChapati:Int = 0
-    val bfastRice:Boolean = false
-    lateinit var lunchIngredient:String
-    var lunchChapati:Int = 1
-    val lunchRice:Boolean = false
-    lateinit var dinnerIngredient:String
-    val dinnerChapati:Int = 0
-    val dinnerRice:Boolean = false
+    val scope = rememberCoroutineScope()
+    var bfastIngredient by remember { mutableStateOf("") }
+    var bfastChapati by remember { mutableIntStateOf(0) }
+    var bfastRice by remember { mutableStateOf(false) }
+    var lunchIngredient by remember { mutableStateOf("") }
+    var lunchChapati by remember { mutableIntStateOf(0) }
+    var lunchRice by remember { mutableStateOf(false) }
+    var dinnerIngredient by remember { mutableStateOf("") }
+    var dinnerChapati by remember { mutableIntStateOf(0) }
+    var dinnerRice by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
+    val sheetState = rememberModalBottomSheetState()
 //    val mealViewModel = MealViewModel()
 //    LaunchedEffect(Unit){
 //        mealViewModel.getMealPlan("spinach","vegetarian","breakfast","100-700")
@@ -71,6 +55,8 @@ fun DietScreen(navController: NavHostController){
 
     if(showBottomSheet){
         ModalBottomSheet(
+            modifier = Modifier.fillMaxSize(),
+            sheetState = sheetState,
             onDismissRequest = { showBottomSheet = false }
         ) {
             Spacer(modifier = Modifier.padding(10.dp))
@@ -83,7 +69,7 @@ fun DietScreen(navController: NavHostController){
             }
             Row(verticalAlignment = Alignment.CenterVertically,modifier = Modifier.padding(12.dp)) {
                 OutlinedTextField(
-                    value = "",
+                    value = bfastIngredient,
                     onValueChange = { bfastIngredient = it },
                     label = {   Text("Breakfast Ingredient", maxLines = 1 ,overflow = TextOverflow.Ellipsis) },
                     shape = RoundedCornerShape(30.dp),
@@ -95,7 +81,7 @@ fun DietScreen(navController: NavHostController){
                 if(bfastChapati==0){
                     TextButton(
                         onClick = {
-                            bfastChapati = 1
+                            bfastChapati++
                         },
                         modifier = Modifier
                             .padding(top = 4.dp)
@@ -116,7 +102,7 @@ fun DietScreen(navController: NavHostController){
                             .height(40.dp)
                     ) {
                         IconButton(
-                            onClick = { },
+                            onClick = { bfastChapati-- },
                             modifier = Modifier.size(24.dp)
                         ) {
                             Image(
@@ -134,7 +120,7 @@ fun DietScreen(navController: NavHostController){
                         )
 
                         IconButton(
-                            onClick = {  },
+                            onClick = { bfastChapati++ },
                             modifier = Modifier.size(24.dp)
                         ) {
                             Image(
@@ -151,15 +137,15 @@ fun DietScreen(navController: NavHostController){
 
                 Checkbox(
                     checked = bfastRice,
-                    onCheckedChange = { !bfastRice }
+                    onCheckedChange = { bfastRice = !bfastRice }
                 )
 
             }
 
             Row(verticalAlignment = Alignment.CenterVertically,modifier = Modifier.padding(12.dp)) {
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = { bfastIngredient = it },
+                    value = lunchIngredient,
+                    onValueChange = { lunchIngredient = it },
                     label = {   Text("Lunch Ingredient", maxLines = 1 ,overflow = TextOverflow.Ellipsis) },
                     shape = RoundedCornerShape(30.dp),
                     modifier = Modifier.width(140.dp).padding(start = 6.dp)
@@ -170,7 +156,7 @@ fun DietScreen(navController: NavHostController){
                 if(lunchChapati==0){
                     TextButton(
                         onClick = {
-                            lunchChapati = 1
+                            lunchChapati++
                         },
                         modifier = Modifier
                             .padding(top = 4.dp)
@@ -226,16 +212,16 @@ fun DietScreen(navController: NavHostController){
 
                 Checkbox(
                     checked = lunchRice,
-                    onCheckedChange = { !lunchRice }
+                    onCheckedChange = { lunchRice = !lunchRice }
                 )
 
             }
 
             Row(verticalAlignment = Alignment.CenterVertically,modifier = Modifier.padding(12.dp)) {
                 OutlinedTextField(
-                    value = "",
-                    onValueChange = { bfastIngredient = it },
-                    label = {   Text("Breakfast Ingredient", maxLines = 1 ,overflow = TextOverflow.Ellipsis) },
+                    value = dinnerIngredient,
+                    onValueChange = { dinnerIngredient = it },
+                    label = {   Text("Dinner Ingredient", maxLines = 1 ,overflow = TextOverflow.Ellipsis) },
                     shape = RoundedCornerShape(30.dp),
                     modifier = Modifier.width(140.dp).padding(start = 6.dp)
                 )
@@ -245,7 +231,7 @@ fun DietScreen(navController: NavHostController){
                 if(dinnerChapati==0){
                     TextButton(
                         onClick = {
-
+                            dinnerChapati++
                         },
                         modifier = Modifier
                             .padding(top = 4.dp)
@@ -266,7 +252,7 @@ fun DietScreen(navController: NavHostController){
                             .height(40.dp)
                     ) {
                         IconButton(
-                            onClick = { },
+                            onClick = { dinnerChapati-- },
                             modifier = Modifier.size(24.dp)
                         ) {
                             Image(
@@ -284,7 +270,7 @@ fun DietScreen(navController: NavHostController){
                         )
 
                         IconButton(
-                            onClick = {  },
+                            onClick = { dinnerChapati++ },
                             modifier = Modifier.size(24.dp)
                         ) {
                             Image(
@@ -301,13 +287,17 @@ fun DietScreen(navController: NavHostController){
 
                 Checkbox(
                     checked = dinnerRice,
-                    onCheckedChange = { !dinnerRice }
+                    onCheckedChange = { dinnerRice = !dinnerRice }
                 )
 
             }
 
             ElevatedButton(
-                onClick = {  },
+                onClick = {
+                    scope.launch {
+                        sheetState.hide()
+                    }
+                    showBottomSheet = false },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -318,14 +308,6 @@ fun DietScreen(navController: NavHostController){
         }
     }
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BottomSheet() {
-
-
-}
-
 
 @Composable
 fun DietTypeList(onItemClick: (String) -> Unit){
@@ -338,11 +320,27 @@ fun DietTypeList(onItemClick: (String) -> Unit){
     }
 }
 
+val DietTypeList = listOf(
+    DietType(R.drawable.gluton_free, "Gluten Free"),
+    DietType(R.drawable.gluton_free, "Keto-Friendly"),
+    DietType(R.drawable.gluton_free, "Vegan"),
+    DietType(R.drawable.gluton_free, "Vegetarian"),
+    DietType(R.drawable.gluton_free, "Peanut Free"),
+    DietType(R.drawable.gluton_free, "Fish Free"),
+    DietType(R.drawable.gluton_free, "Sugar Free"),
+    DietType(R.drawable.gluton_free, "Dairy Free"),
+    DietType(R.drawable.gluton_free, "Egg Free"),
+    DietType(R.drawable.gluton_free, "Immuno-Supportive"),
+    DietType(R.drawable.gluton_free, "Kidney Friendly"),
+    DietType(R.drawable.gluton_free, "Low Sugar"),
+    DietType(R.drawable.gluton_free, "Mustard Free"),
+    DietType(R.drawable.gluton_free, "No Oil Added"),
+    DietType(R.drawable.gluton_free, "Shellfish Free"),
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DietScreenPreview(){
-    val navController = rememberNavController()
-//    DietScreen(navController)
-    BottomSheet()
+//    DietScreen()
 }

@@ -12,6 +12,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.*
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,12 +65,14 @@ fun DietTypeItem(dietType: DietType, onClick: () -> Unit){
             Text(text = dietType.name,
                  color = Color.White,
                  fontFamily = FontFamily.Default,
-                 fontSize = 23.sp,
+                 fontSize = 22.sp,
                  fontWeight = FontWeight.Bold,
                  modifier = Modifier.align(Alignment.BottomCenter)
                      .fillMaxWidth()
                      .padding(10.dp),
-                 textAlign = TextAlign.Center
+                 textAlign = TextAlign.Center,
+                 maxLines = 2,
+                 overflow = TextOverflow.Clip
             )
         }
     }
