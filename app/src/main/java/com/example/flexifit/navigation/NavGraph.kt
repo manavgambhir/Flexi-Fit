@@ -17,6 +17,10 @@ fun NavGraph(navHostController: NavHostController) {
             DietScreen(navHostController)
         }
 
+        composable(Routes.MealPlan.routes){
+            MealPlanScreen(navHostController)
+        }
+
         composable(Routes.Gym.routes){
             GymScreen(navHostController)
         }

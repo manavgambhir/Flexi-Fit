@@ -28,8 +28,7 @@ fun BottomNav(navController: NavHostController) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     // Get current route
     val currentRoute = navController1.currentBackStackEntryAsState().value?.destination?.route
-    Scaffold(modifier = Modifier
-        .fillMaxSize()
+    Scaffold(modifier = Modifier.fillMaxSize()
         .nestedScroll(scrollBehavior.nestedScrollConnection),
              topBar = {
                  CustomAppBar(scrollBehavior = scrollBehavior,

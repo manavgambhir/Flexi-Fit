@@ -4,6 +4,7 @@ sealed class Routes(val routes:String) {
     object Gym:Routes("gym")
     object Yoga:Routes("yoga")
     object Diet:Routes("diet")
+    object MealPlan:Routes("meal_plan")
     object Plan:Routes("workout_plan")
     object BottomNav:Routes("bottomNav")
     object Splash:Routes("splash")

@@ -67,6 +67,7 @@ fun DietScreen(navController: NavHostController){
 
                 Text("Rice")
             }
+
             Row(verticalAlignment = Alignment.CenterVertically,modifier = Modifier.padding(12.dp)) {
                 OutlinedTextField(
                     value = bfastIngredient,
