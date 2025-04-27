@@ -18,6 +18,7 @@ import androidx.navigation.NavHostController
 import com.example.flexifit.data.models.DietType
 import com.example.flexifit.R
 import com.example.flexifit.itemView.DietTypeItem
+import com.example.flexifit.navigation.Routes
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -298,6 +299,8 @@ fun DietScreen(navController: NavHostController){
                     scope.launch {
                         sheetState.hide()
                     }
+                    val route = Routes.MealPlan.routes
+                    navController.navigate(route)
                     showBottomSheet = false },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                 modifier = Modifier
