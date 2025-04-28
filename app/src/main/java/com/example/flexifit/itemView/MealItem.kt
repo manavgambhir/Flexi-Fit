@@ -1,6 +1,5 @@
 package com.example.flexifit.itemView
 
-import android.net.Uri
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -8,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,6 +45,8 @@ fun MealItem(dishImgUrl: String, dishName: String, dishQty:String, dishCal:Doubl
                 text = dishName,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.constrainAs(name) {
                     start.linkTo(image.end, margin = 18.dp)
                     top.linkTo(parent.top, margin = 13.dp)
@@ -57,7 +59,7 @@ fun MealItem(dishImgUrl: String, dishName: String, dishQty:String, dishCal:Doubl
                 color = Color.Black,
                 modifier = Modifier.constrainAs(qty) {
                     start.linkTo(image.end, margin = 18.dp)
-                    top.linkTo(name.bottom, margin = 2.dp)
+                    top.linkTo(name.bottom)
                 }
             )
 

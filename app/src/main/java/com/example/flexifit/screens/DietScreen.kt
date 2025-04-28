@@ -1,5 +1,6 @@
 package com.example.flexifit.screens
 
+import android.net.Uri
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
@@ -17,8 +18,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.flexifit.data.models.DietType
 import com.example.flexifit.R
+import com.example.flexifit.data.models.MealPlanData
 import com.example.flexifit.itemView.DietTypeItem
 import com.example.flexifit.navigation.Routes
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +78,9 @@ fun DietScreen(navController: NavHostController){
                     onValueChange = { bfastIngredient = it },
                     label = {   Text("Breakfast Ingredient", maxLines = 1 ,overflow = TextOverflow.Ellipsis) },
                     shape = RoundedCornerShape(30.dp),
-                    modifier = Modifier.width(140.dp).padding(start = 6.dp)
+                    modifier = Modifier
+                        .width(140.dp)
+                        .padding(start = 6.dp)
                 )
 
                 Spacer(modifier = Modifier.padding(12.dp))
@@ -150,7 +155,9 @@ fun DietScreen(navController: NavHostController){
                     onValueChange = { lunchIngredient = it },
                     label = {   Text("Lunch Ingredient", maxLines = 1 ,overflow = TextOverflow.Ellipsis) },
                     shape = RoundedCornerShape(30.dp),
-                    modifier = Modifier.width(140.dp).padding(start = 6.dp)
+                    modifier = Modifier
+                        .width(140.dp)
+                        .padding(start = 6.dp)
                 )
 
                 Spacer(modifier = Modifier.padding(12.dp))
@@ -225,7 +232,9 @@ fun DietScreen(navController: NavHostController){
                     onValueChange = { dinnerIngredient = it },
                     label = {   Text("Dinner Ingredient", maxLines = 1 ,overflow = TextOverflow.Ellipsis) },
                     shape = RoundedCornerShape(30.dp),
-                    modifier = Modifier.width(140.dp).padding(start = 6.dp)
+                    modifier = Modifier
+                        .width(140.dp)
+                        .padding(start = 6.dp)
                 )
 
                 Spacer(modifier = Modifier.padding(12.dp))
@@ -299,7 +308,14 @@ fun DietScreen(navController: NavHostController){
                     scope.launch {
                         sheetState.hide()
                     }
-                    val route = Routes.MealPlan.routes
+
+                    val data = MealPlanData(
+                        bfastChapati, bfastRice, lunchChapati, lunchRice, dinnerChapati, dinnerRice
+                    )
+                    val json = Gson().toJson(data)
+                    val encodeJson = Uri.encode(json)
+
+                    val route = Routes.MealPlan.routes.replace("{mealData}",encodeJson)
                     navController.navigate(route)
                     showBottomSheet = false },
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Black),

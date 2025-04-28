@@ -1,6 +1,8 @@
 package com.example.flexifit.screens
 
 import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,11 +22,18 @@ import androidx.compose.ui.unit.*
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.flexifit.R
+import com.example.flexifit.data.models.MealPlanData
 import com.example.flexifit.itemView.MealItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MealPlanScreen(navController: NavHostController) {
+fun MealPlanScreen(navController: NavHostController, mealPlanData: MealPlanData) {
+    val context = LocalContext.current
+    BackHandler {
+        // Do nothing here, prevent default back navigation
+        Toast.makeText(context, "Press the regenerate button to regenerate meal plan, or press back button to move to previous screen",Toast.LENGTH_SHORT).show()
+    }
+
     Column(modifier = Modifier.fillMaxWidth()) {
         TopAppBar(title = { Text(text = "Full Day Meal Plan",
                                  fontSize = 24.sp,
@@ -35,7 +45,10 @@ fun MealPlanScreen(navController: NavHostController) {
                     contentDescription = "Back"
                 )
         } }, actions = {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton(onClick = {
+                // TODO: Call API again to regenerate plan
+                navController.popBackStack()
+            }) {
                 Icon(
                     imageVector = Icons.Default.Refresh,
                     contentDescription = "Back"
@@ -43,13 +56,13 @@ fun MealPlanScreen(navController: NavHostController) {
             }
         })
 
-        MealPlanContent()
+        MealPlanContent(mealPlanData)
 
     }
 }
 
 @Composable
-fun MealPlanContent() {
+fun MealPlanContent(mealPlanData: MealPlanData) {
     var bfastCheck by remember { mutableStateOf(false) }
     var lunchCheck by remember { mutableStateOf(false) }
     var dinnerCheck by remember { mutableStateOf(false) }
@@ -63,8 +76,8 @@ fun MealPlanContent() {
             MealCard(
                 title = "BREAKFAST",
                 description = "There's nothing like starting the day with a healthy, filling breakfast",
-                isRice = true,
-                chapatiCount = 1,
+                isRice = mealPlanData.bfastRice,
+                chapatiCount = mealPlanData.bfastChapati,
                 isChecked = bfastCheck,
                 onCheckChanged = { bfastCheck = it }
             )
@@ -76,8 +89,8 @@ fun MealPlanContent() {
             MealCard(
                 title = "LUNCH",
                 description = "Lunch, the sacred middle ground between morning hustle and afternoon grind.",
-                isRice = true,
-                chapatiCount = 1,
+                isRice = mealPlanData.lunchRice,
+                chapatiCount = mealPlanData.lunchChapati,
                 isChecked = lunchCheck,
                 onCheckChanged = { lunchCheck = it }
             )
@@ -89,8 +102,8 @@ fun MealPlanContent() {
             MealCard(
                 title = "DINNER",
                 description = "The best memories are made around the dinner table",
-                isRice = true,
-                chapatiCount = 1,
+                isRice = mealPlanData.dinnerRice,
+                chapatiCount = mealPlanData.dinnerChapati,
                 isChecked = dinnerCheck,
                 onCheckChanged = { dinnerCheck = it }
             )
@@ -156,5 +169,5 @@ private fun getUrl(resourceId: Int): String {
 @Composable
 fun MealPlanScreenPreview() {
     val novHostController = rememberNavController()
-    MealPlanScreen(novHostController)
+    MealPlanScreen(novHostController, MealPlanData(1,true,1,true,1,true))
 }
