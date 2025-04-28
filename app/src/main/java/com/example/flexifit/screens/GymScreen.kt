@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 @Composable
 fun GymScreen(navController: NavHostController){
     Text("Gym Screen")
+    // TODO: Implement TabRow with Horizontal Pager
 }
 
 @Preview(showBackground = true, showSystemUi = true)
