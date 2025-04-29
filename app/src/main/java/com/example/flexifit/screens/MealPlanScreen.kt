@@ -120,7 +120,7 @@ fun MealCard(
     isChecked: Boolean,
     onCheckChanged: (Boolean) -> Unit
 ) {
-    Card(modifier = Modifier.fillMaxWidth(), border = BorderStroke(2.dp, Color.Black)) {
+    Card(modifier = Modifier.fillMaxWidth(), border = BorderStroke(2.dp, Color.Black), elevation = CardDefaults.cardElevation(2.dp)) {
         Column(modifier = Modifier.padding(20.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
                 Checkbox(
