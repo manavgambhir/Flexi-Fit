@@ -1,4 +1,4 @@
-package com.example.flexifit.screens
+package com.example.flexifit.presentation.onboarding.screens
 
 import android.net.Uri
 import android.util.Log

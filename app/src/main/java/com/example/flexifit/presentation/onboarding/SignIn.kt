@@ -1,4 +1,4 @@
-package com.example.flexifit.screens.onboarding
+package com.example.flexifit.presentation.onboarding
 
 import android.widget.Toast
 import androidx.compose.foundation.Image

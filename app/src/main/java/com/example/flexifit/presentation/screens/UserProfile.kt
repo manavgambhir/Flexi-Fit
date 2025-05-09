@@ -1,4 +1,4 @@
-package com.example.flexifit.screens
+package com.example.flexifit.presentation.onboarding.screens
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -6,12 +6,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 
 @Composable
-fun YogaScreen(navController: NavHostController) {
-    Text("Yoga Screen")
+fun UserProfile(navController: NavHostController){
+    Text("Wrkout Plan Screen")
 }
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun YogaScreenPreview(){
-//    YogaScreen()
+fun UserProfilePreview(){
+//    UserProfile()
 }

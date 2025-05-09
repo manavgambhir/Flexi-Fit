@@ -1,4 +1,4 @@
-package com.example.flexifit.screens
+package com.example.flexifit.presentation.screens
 
 import android.net.Uri
 import androidx.compose.foundation.*

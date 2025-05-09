@@ -1,4 +1,4 @@
-package com.example.flexifit.screens
+package com.example.flexifit.presentation.screens
 
 import android.window.SplashScreen
 import androidx.compose.material3.Text
