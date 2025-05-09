@@ -1,6 +1,7 @@
 package com.example.flexifit.screens
 
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
@@ -146,23 +147,17 @@ fun MealCard(
             Spacer(modifier = Modifier.size(8.dp))
 
             // TODO: API Call Item
-            MealItem(getUrl(R.drawable.rice),"API Call","100.0 g",200.0,"")
+            MealItem("https://cdn.pixabay.com/photo/2016/09/07/10/37/kermit-1651325_1280.jpg","API Call Test","100.0 g",200.0,"")
 
             if(isRice){
-                MealItem(getUrl(R.drawable.rice),"Rice","1 Bowl",136.0,"")
+                MealItem(R.drawable.rice,"Rice","1 Bowl",136.0,"")
             }
 
             if(chapatiCount>0){
-                MealItem(getUrl(R.drawable.roti),"Chapati","$chapatiCount Serving",104.0,"")
+                MealItem(R.drawable.roti,"Chapati","$chapatiCount Serving",104.0,"")
             }
         }
     }
-}
-
-private fun getUrl(resourceId: Int): String {
-    return Uri.parse(
-        "android.resource://" + R::class.java.getPackage().getName() + "/" + resourceId
-    ).toString()
 }
 
 @Preview(showBackground = true, showSystemUi = true)
