@@ -1,4 +1,4 @@
-package com.example.flexifit.presentation.onboarding.screens
+package com.example.flexifit.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box

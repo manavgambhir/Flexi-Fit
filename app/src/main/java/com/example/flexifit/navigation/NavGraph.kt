@@ -6,7 +6,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.flexifit.data.models.MealPlanData
-import com.example.flexifit.screens.*
+import com.example.flexifit.presentation.screens.BottomNav
+import com.example.flexifit.presentation.screens.DietScreen
+import com.example.flexifit.presentation.screens.GymScreen
+import com.example.flexifit.presentation.screens.MealPlanScreen
+import com.example.flexifit.presentation.screens.SplashScreen
+import com.example.flexifit.presentation.screens.YogaScreen
 import com.google.gson.Gson
 
 @Composable

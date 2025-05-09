@@ -40,7 +40,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.flexifit.R
 
 @Composable
-fun SignIn(navController: NavHostController){
+fun SignInScreen(navController: NavHostController){
     var email by remember {
         mutableStateOf("")
     }
@@ -119,5 +119,5 @@ fun SignIn(navController: NavHostController){
 @Composable
 fun EmailView() {
     val navController = rememberNavController()
-    SignIn(navController)
+    SignInScreen(navController)
 }

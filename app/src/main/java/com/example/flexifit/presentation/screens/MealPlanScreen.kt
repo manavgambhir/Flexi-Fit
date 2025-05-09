@@ -1,7 +1,5 @@
-package com.example.flexifit.presentation.onboarding.screens
+package com.example.flexifit.presentation.screens
 
-import android.net.Uri
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
