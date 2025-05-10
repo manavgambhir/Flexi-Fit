@@ -10,9 +10,14 @@ import com.example.flexifit.screens.BottomNav
 import com.example.flexifit.screens.DietScreen
 import com.example.flexifit.screens.GymScreen
 import com.example.flexifit.screens.MealPlanScreen
-import com.example.flexifit.screens.SignInScreen
+import com.example.flexifit.screens.onboarding.SignInScreen
 import com.example.flexifit.screens.SplashScreen
 import com.example.flexifit.screens.YogaScreen
+import com.example.flexifit.screens.onboarding.OnboardDOBScreen
+import com.example.flexifit.screens.onboarding.OnboardGenderScreen
+import com.example.flexifit.screens.onboarding.OnboardHeightScreen
+import com.example.flexifit.screens.onboarding.OnboardNameScreen
+import com.example.flexifit.screens.onboarding.OnboardWeightScreen
 import com.google.gson.Gson
 
 @Composable
@@ -47,6 +52,26 @@ fun NavGraph(navHostController: NavHostController) {
 
         composable(Routes.SignIn.routes){
             SignInScreen(navHostController)
+        }
+
+        composable(Routes.OnboardName.routes){
+            OnboardNameScreen(navHostController)
+        }
+
+        composable(Routes.OnboardDOB.routes){
+            OnboardDOBScreen(navHostController)
+        }
+
+        composable(Routes.OnboardHeight.routes){
+            OnboardHeightScreen(navHostController)
+        }
+
+        composable(Routes.OnboardWeight.routes){
+            OnboardWeightScreen(navHostController)
+        }
+
+        composable(Routes.OnboardGender.routes){
+            OnboardGenderScreen(navHostController)
         }
 //
 //        composable(Routes.OtherUserProfile.routes){

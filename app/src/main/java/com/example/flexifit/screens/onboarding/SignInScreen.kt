@@ -1,6 +1,5 @@
-package com.example.flexifit.screens
+package com.example.flexifit.screens.onboarding
 
-import android.widget.Space
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,7 +27,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,9 +67,13 @@ fun SignInScreen(navController: NavHostController){
     LaunchedEffect(state) {
         when (state) {
             is LoginState.Success -> {
-                navController.navigate(Routes.BottomNav.routes) {
+                Toast.makeText(context, "Sign-In Successful!", Toast.LENGTH_SHORT).show()
+                navController.navigate(Routes.OnboardName.routes) {
                     popUpTo(Routes.SignIn.routes) { inclusive = true }
                 }
+//                navController.navigate(Routes.BottomNav.routes) {
+//                    popUpTo(Routes.SignIn.routes) { inclusive = true }
+//                }
             }
             is LoginState.Error -> {
                 Toast.makeText(context, (state as LoginState.Error).message, Toast.LENGTH_SHORT).show()
@@ -121,6 +123,7 @@ fun SignInScreen(navController: NavHostController){
                     Toast.makeText(context, "Please enter valid details to login", Toast.LENGTH_SHORT).show()
                 }
                 else{
+                    Toast.makeText(context, "Sign In unsuccessful, use Google to sign in", Toast.LENGTH_SHORT).show()
                     // TODO: If email and pass are provided -> Verify and SignIn
                 }
             },
