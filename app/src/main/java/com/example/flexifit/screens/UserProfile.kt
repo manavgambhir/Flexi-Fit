@@ -1,4 +1,4 @@
-package com.example.flexifit.presentation.screens
+package com.example.flexifit.screens
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable

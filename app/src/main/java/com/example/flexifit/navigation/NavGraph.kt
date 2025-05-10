@@ -6,12 +6,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.flexifit.data.models.MealPlanData
-import com.example.flexifit.presentation.screens.BottomNav
-import com.example.flexifit.presentation.screens.DietScreen
-import com.example.flexifit.presentation.screens.GymScreen
-import com.example.flexifit.presentation.screens.MealPlanScreen
-import com.example.flexifit.presentation.screens.SplashScreen
-import com.example.flexifit.presentation.screens.YogaScreen
+import com.example.flexifit.screens.BottomNav
+import com.example.flexifit.screens.DietScreen
+import com.example.flexifit.screens.GymScreen
+import com.example.flexifit.screens.MealPlanScreen
+import com.example.flexifit.screens.SignInScreen
+import com.example.flexifit.screens.SplashScreen
+import com.example.flexifit.screens.YogaScreen
 import com.google.gson.Gson
 
 @Composable
@@ -42,6 +43,10 @@ fun NavGraph(navHostController: NavHostController) {
 
         composable(Routes.BottomNav.routes){
             BottomNav(navHostController)
+        }
+
+        composable(Routes.SignIn.routes){
+            SignInScreen(navHostController)
         }
 //
 //        composable(Routes.OtherUserProfile.routes){

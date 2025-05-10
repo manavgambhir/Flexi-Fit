@@ -8,6 +8,7 @@ sealed class Routes(val routes:String) {
 //    object WorkoutPlan:Routes("workout_plan")
     object BottomNav:Routes("bottomNav")
     object Splash:Routes("splash")
+    object SignIn:Routes("sign_in")
 
 //    object UserProfile:Routes("profile")
 

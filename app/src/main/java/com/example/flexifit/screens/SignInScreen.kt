@@ -1,6 +1,9 @@
-package com.example.flexifit.presentation.onboarding
+package com.example.flexifit.screens
 
+import android.widget.Space
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,9 +23,12 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,7 +43,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.flexifit.LoginState
 import com.example.flexifit.R
+import com.example.flexifit.navigation.Routes
+import com.example.flexifit.viewmodels.AuthViewModel
 
 @Composable
 fun SignInScreen(navController: NavHostController){
@@ -47,9 +56,33 @@ fun SignInScreen(navController: NavHostController){
     var pass by remember {
         mutableStateOf("")
     }
+
     val context = LocalContext.current
 
+    val authViewModel = remember { AuthViewModel() }
+    val state by authViewModel.loginState.collectAsState()
+
+    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        authViewModel.googleSignIn(context,null)
+    }
+
+    LaunchedEffect(state) {
+        when (state) {
+            is LoginState.Success -> {
+                navController.navigate(Routes.BottomNav.routes) {
+                    popUpTo(Routes.SignIn.routes) { inclusive = true }
+                }
+            }
+            is LoginState.Error -> {
+                Toast.makeText(context, (state as LoginState.Error).message, Toast.LENGTH_SHORT).show()
+            }
+            else -> {}
+        }
+    }
+
+
     Column(Modifier.fillMaxSize()){
+        Spacer(modifier = Modifier.height(25.dp))
         Row {
             Text(text = "Sign In", fontSize = 44.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.offset(22.dp,25.dp))
         }
@@ -104,7 +137,7 @@ fun SignInScreen(navController: NavHostController){
             Spacer(modifier = Modifier.height(10.dp))
 
             OutlinedButton(onClick = {
-
+                authViewModel.googleSignIn(context,launcher)
             }, modifier = Modifier.fillMaxWidth()) {
                 Image(painter = painterResource(R.drawable.g_ic), contentDescription = "google logo", modifier = Modifier.size(35.dp))
                 Spacer(modifier = Modifier.width(5.dp))

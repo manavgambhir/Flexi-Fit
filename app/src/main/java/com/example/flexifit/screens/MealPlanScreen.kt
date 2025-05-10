@@ -1,4 +1,4 @@
-package com.example.flexifit.presentation.screens
+package com.example.flexifit.screens
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler

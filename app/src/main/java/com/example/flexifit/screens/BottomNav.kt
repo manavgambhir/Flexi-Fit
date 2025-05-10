@@ -1,4 +1,4 @@
-package com.example.flexifit.presentation.screens
+package com.example.flexifit.screens
 
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
