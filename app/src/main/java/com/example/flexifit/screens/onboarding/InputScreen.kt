@@ -29,16 +29,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.example.flexifit.R
 import com.example.flexifit.navigation.Routes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TextInputScreen(
+fun InputScreen(
     title:String,
     value:String,
-    hint:String?,
+    hint:String?="",
     onValueChange:(String)->Unit,
     onNextClick:()->Unit,
     keyboardType: KeyboardType,
@@ -48,22 +47,7 @@ fun TextInputScreen(
     val showBackButton = currentRoute != Routes.OnboardName.routes
     // This base composable will be implemented by 1) Age Screen 2) Height Screen 3) Weight Screen 4) Any injury Screen
     Column(modifier = Modifier.fillMaxSize()) {
-        TopAppBar(
-            title = {},
-            navigationIcon = {
-                if (showBackButton) {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_back),
-                            contentDescription = "Back"
-                        )
-                    }
-                }
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Text(text = title, fontSize = 43.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.padding(top = 20.dp, start = 20.dp))
+        OnboardingTopBar(title,showBackButton,navController)
 
         TextField(
             value = value,
@@ -96,6 +80,28 @@ fun TextInputScreen(
         }
     }
 }
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun OnboardingTopBar(title:String, showBackButton: Boolean, navController: NavHostController) {
+    TopAppBar(
+        title = {},
+        navigationIcon = {
+            if (showBackButton) {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_back),
+                        contentDescription = "Back"
+                    )
+                }
+            }
+        },
+        modifier = Modifier.fillMaxWidth()
+    )
+
+    Text(text = title, fontSize = 43.sp, fontWeight = FontWeight.ExtraBold, modifier = Modifier.padding(top = 20.dp, start = 20.dp))
+}
+
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

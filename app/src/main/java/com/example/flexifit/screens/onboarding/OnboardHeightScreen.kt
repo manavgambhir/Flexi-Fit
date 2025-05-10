@@ -14,7 +14,7 @@ import com.example.flexifit.navigation.Routes
 @Composable
 fun OnboardHeightScreen(navController: NavHostController) {
     var height by remember { mutableStateOf("") }
-    TextInputScreen(
+    InputScreen(
         title = "Height",
         value = height,
         hint = "In cm",

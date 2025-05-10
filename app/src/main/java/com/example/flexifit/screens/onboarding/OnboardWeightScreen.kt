@@ -14,7 +14,7 @@ import com.example.flexifit.navigation.Routes
 @Composable
 fun OnboardWeightScreen(navController: NavHostController) {
     var weight by remember { mutableStateOf("") }
-    TextInputScreen(
+    InputScreen(
         title = "Weight",
         value = weight,
         hint = "In Kg",

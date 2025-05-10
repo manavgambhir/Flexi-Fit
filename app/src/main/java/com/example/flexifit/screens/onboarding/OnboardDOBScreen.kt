@@ -14,7 +14,7 @@ import com.example.flexifit.navigation.Routes
 @Composable
 fun OnboardDOBScreen(navController: NavHostController) {
     var dob by remember { mutableStateOf("") }
-    TextInputScreen(
+    InputScreen(
         title = "Date of Birth",
         value = dob,
         hint = "In DD-MM-YYYY format",

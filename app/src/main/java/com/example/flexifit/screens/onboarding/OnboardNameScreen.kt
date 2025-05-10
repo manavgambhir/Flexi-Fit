@@ -13,7 +13,7 @@ import com.example.flexifit.navigation.Routes
 @Composable
 fun OnboardNameScreen(navController: NavHostController) {
     var name by remember { mutableStateOf("") }
-    TextInputScreen(
+    InputScreen(
         title = "Name",
         value = name,
         onValueChange = { name = it },
