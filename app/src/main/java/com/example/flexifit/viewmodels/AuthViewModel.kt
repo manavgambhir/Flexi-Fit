@@ -65,6 +65,7 @@ class AuthViewModel() : ViewModel() {
                     putExtra(Settings.EXTRA_ACCOUNT_TYPES, arrayOf("com.google"))
                 })
             } catch (e: Exception) {
+                Log.e("AuthError", "Google Sign-In error", e)
                 _loginState.value = LoginState.Error(e.message ?: "Google Sign-In error")
             }
         }

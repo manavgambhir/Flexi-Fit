@@ -1,12 +1,11 @@
 package com.example.flexifit.data.models
 
 data class UserProfile(
-    val uid: String = "",
-    val name: String = "",
-    val dob: String = "Unknown",
-    val gender: String = "",
-    val weight: Float = 0f,
-    val height: Float = 0f,
-    val strengthTrainingExperience: String = "",
-    val injury: String = ""
+    val name: String,
+    val dob: String,
+    val gender: String,
+    val weight: Float,
+    val height: Float,
+    val strengthExperience: String,
+//    val injuryInfo: String = ""
 )

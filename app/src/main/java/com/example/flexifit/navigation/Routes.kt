@@ -14,6 +14,7 @@ sealed class Routes(val routes:String) {
     object OnboardHeight:Routes("onboard_height")
     object OnboardWeight:Routes("onboard_weight")
     object OnboardGender:Routes("onboard_gender")
+    object OnboardStrength:Routes("onboard_strength")
 
 
 //    object UserProfile:Routes("profile")

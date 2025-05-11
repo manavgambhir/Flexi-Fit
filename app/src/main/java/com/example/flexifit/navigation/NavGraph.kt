@@ -2,6 +2,7 @@ package com.example.flexifit.navigation
 
 import android.net.Uri
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,11 +18,14 @@ import com.example.flexifit.screens.onboarding.OnboardDOBScreen
 import com.example.flexifit.screens.onboarding.OnboardGenderScreen
 import com.example.flexifit.screens.onboarding.OnboardHeightScreen
 import com.example.flexifit.screens.onboarding.OnboardNameScreen
+import com.example.flexifit.screens.onboarding.OnboardStrengthTScreen
 import com.example.flexifit.screens.onboarding.OnboardWeightScreen
+import com.example.flexifit.viewmodels.OnboardingViewModel
 import com.google.gson.Gson
 
 @Composable
 fun NavGraph(navHostController: NavHostController) {
+    val onboardingViewModel:OnboardingViewModel = viewModel()
     NavHost(navController = navHostController, startDestination = Routes.Splash.routes){
         composable(Routes.Splash.routes){
             SplashScreen(navHostController)
@@ -55,23 +59,27 @@ fun NavGraph(navHostController: NavHostController) {
         }
 
         composable(Routes.OnboardName.routes){
-            OnboardNameScreen(navHostController)
+            OnboardNameScreen(navHostController,onboardingViewModel)
         }
 
         composable(Routes.OnboardDOB.routes){
-            OnboardDOBScreen(navHostController)
+            OnboardDOBScreen(navHostController,onboardingViewModel)
         }
 
         composable(Routes.OnboardHeight.routes){
-            OnboardHeightScreen(navHostController)
+            OnboardHeightScreen(navHostController,onboardingViewModel)
         }
 
         composable(Routes.OnboardWeight.routes){
-            OnboardWeightScreen(navHostController)
+            OnboardWeightScreen(navHostController,onboardingViewModel)
         }
 
         composable(Routes.OnboardGender.routes){
-            OnboardGenderScreen(navHostController)
+            OnboardGenderScreen(navHostController,onboardingViewModel)
+        }
+
+        composable(Routes.OnboardStrength.routes){
+            OnboardStrengthTScreen(navHostController,onboardingViewModel)
         }
 //
 //        composable(Routes.OtherUserProfile.routes){
