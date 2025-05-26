@@ -1,5 +1,6 @@
 package com.example.flexifit.screens
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
@@ -19,18 +20,51 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.flexifit.R
+import com.example.flexifit.data.models.MealModel
 import com.example.flexifit.data.models.MealPlanData
+import com.example.flexifit.data.models.Recipe
 import com.example.flexifit.itemView.MealItem
+import com.example.flexifit.viewmodels.MealViewModel
+import java.util.Locale
+import java.util.Random
+import kotlin.math.roundToInt
+import kotlin.time.times
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MealPlanScreen(navController: NavHostController, mealPlanData: MealPlanData) {
     val context = LocalContext.current
+
+    val mealViewModel = remember { MealViewModel() }
+    val breakfastResult by mealViewModel.breakfastResult.collectAsState()
+    val lunchResult by mealViewModel.lunchResult.collectAsState()
+    val dinnerResult by mealViewModel.dinnerResult.collectAsState()
+    var bfastCal by remember { mutableDoubleStateOf(0.0) }
+    var lunchCal by remember { mutableDoubleStateOf(0.0) }
+    var dinnerCal by remember { mutableDoubleStateOf(0.0) }
+
+    LaunchedEffect(Unit){
+        val health = mealPlanData.health
+        val bfastIg = mealPlanData.bfastIngredient
+        val lunchIg = mealPlanData.lunchIngredient
+        val dinnerIg = mealPlanData.dinnerIngredient
+        val cal = mealPlanData.calories
+
+        // Dividing in the ratio of 3:4:3
+        bfastCal = ((cal * 0.3).roundToInt() * 100.0 / 100.0)
+        lunchCal = ((cal * 0.4).roundToInt() * 100.0 / 100.0)
+        dinnerCal = ((cal * 0.3).roundToInt() * 100.0 / 100.0)
+
+        mealViewModel.getMealPlan(bfastIg,health,"breakfast",bfastCal.toString())
+        mealViewModel.getMealPlan(lunchIg,health,"lunch",lunchCal.toString())
+        mealViewModel.getMealPlan(dinnerIg,health,"dinner",dinnerCal.toString())
+//        mealViewModel.getMealPlan("spinach","vegetarian","breakfast","100-700")
+    }
+
     BackHandler {
         // Do nothing here, prevent default back navigation
-        Toast.makeText(context, "Press the regenerate button to regenerate meal plan, or press back button to move to previous screen",Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Press the regenerate button to regenerate meal plan, \nor press back button to move to previous screen",Toast.LENGTH_SHORT).show()
     }
 
     Column(modifier = Modifier.fillMaxWidth()) {
@@ -55,13 +89,27 @@ fun MealPlanScreen(navController: NavHostController, mealPlanData: MealPlanData)
             }
         })
 
-        MealPlanContent(mealPlanData)
-
+        if(breakfastResult == null || lunchResult == null || dinnerResult == null){
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator()
+            }
+        }
+        else{
+            MealPlanContent(mealPlanData, breakfastResult!!,bfastCal, lunchResult!!, lunchCal, dinnerResult!!, dinnerCal)
+        }
     }
 }
 
 @Composable
-fun MealPlanContent(mealPlanData: MealPlanData) {
+fun MealPlanContent(
+    mealPlanData: MealPlanData,
+    breakfastResult: MealModel,
+    bfastCal:Double,
+    lunchResult: MealModel,
+    lunchCal:Double,
+    dinnerResult: MealModel,
+    dinnerCal:Double
+) {
     var bfastCheck by remember { mutableStateOf(false) }
     var lunchCheck by remember { mutableStateOf(false) }
     var dinnerCheck by remember { mutableStateOf(false) }
@@ -75,6 +123,8 @@ fun MealPlanContent(mealPlanData: MealPlanData) {
             MealCard(
                 title = "BREAKFAST",
                 description = "There's nothing like starting the day with a healthy, filling breakfast",
+                result = breakfastResult,
+                netCalories = bfastCal,
                 isRice = mealPlanData.bfastRice,
                 chapatiCount = mealPlanData.bfastChapati,
                 isChecked = bfastCheck,
@@ -88,6 +138,8 @@ fun MealPlanContent(mealPlanData: MealPlanData) {
             MealCard(
                 title = "LUNCH",
                 description = "Lunch, the sacred middle ground between morning hustle and afternoon grind.",
+                result = lunchResult,
+                netCalories = lunchCal,
                 isRice = mealPlanData.lunchRice,
                 chapatiCount = mealPlanData.lunchChapati,
                 isChecked = lunchCheck,
@@ -101,6 +153,8 @@ fun MealPlanContent(mealPlanData: MealPlanData) {
             MealCard(
                 title = "DINNER",
                 description = "The best memories are made around the dinner table",
+                result = dinnerResult,
+                netCalories = dinnerCal,
                 isRice = mealPlanData.dinnerRice,
                 chapatiCount = mealPlanData.dinnerChapati,
                 isChecked = dinnerCheck,
@@ -114,6 +168,8 @@ fun MealPlanContent(mealPlanData: MealPlanData) {
 fun MealCard(
     title: String,
     description: String,
+    result: MealModel,
+    netCalories: Double,
     isRice: Boolean,
     chapatiCount: Int,
     isChecked: Boolean,
@@ -144,8 +200,15 @@ fun MealCard(
 
             Spacer(modifier = Modifier.size(8.dp))
 
-            // TODO: API Call Item
-            MealItem("https://cdn.pixabay.com/photo/2016/09/07/10/37/kermit-1651325_1280.jpg","API Call Test","100.0 g",200.0,"")
+            // API Call
+            if(result.count>0){
+                val i = Random(System.nanoTime()).nextInt(result.hits.size)
+                val mealRecipe = result.hits[i].recipe
+                // in grams
+                val qty = ((mealRecipe.totalWeight / mealRecipe.calories) * netCalories.roundToInt())
+                val formattedQty = String.format(Locale.ENGLISH,"%.2f",qty)
+                MealItem(mealRecipe.image,mealRecipe.label,formattedQty,netCalories,mealRecipe.url)
+            }
 
             if(isRice){
                 MealItem(R.drawable.rice,"Rice","1 Bowl",136.0,"")
@@ -161,6 +224,6 @@ fun MealCard(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MealPlanScreenPreview() {
-    val novHostController = rememberNavController()
-    MealPlanScreen(novHostController, MealPlanData(1,true,1,true,1,true))
+//    val novHostController = rememberNavController()
+//    MealPlanScreen(novHostController, MealPlanData(1,true,1,true,1,true))
 }

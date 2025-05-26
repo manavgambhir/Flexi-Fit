@@ -5,10 +5,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.flexifit.data.models.UserProfile
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 class OnboardingViewModel: ViewModel() {
@@ -18,8 +23,14 @@ class OnboardingViewModel: ViewModel() {
     var weight by mutableStateOf("")
     var height by mutableStateOf("")
     var strengthExperience by mutableStateOf("")
-    private val uid = Firebase.auth.currentUser?.uid
 //    var injuryInfo by mutableStateOf("")
+
+    private val _userProfile = MutableStateFlow<UserProfile?>(null)
+    val userProfile: StateFlow<UserProfile?> = _userProfile
+
+    // null = no check done, true = exists, false = not found
+    private val _userProfileExists = MutableStateFlow<Boolean?>(null)
+    val userProfileExists: StateFlow<Boolean?> = _userProfileExists.asStateFlow()
 
     fun toUserProfile(): UserProfile? {
         if (name.isBlank() || dob.isBlank() || gender.isBlank() ||
@@ -33,11 +44,10 @@ class OnboardingViewModel: ViewModel() {
             name = name.trim(),
             dob = dob.trim(),
             gender = gender.trim(),
-            weight = weight.toFloat(),
-            height = height.toFloat(),
+            weight = weight.toDouble(),
+            height = height.toDouble(),
             strengthExperience = strengthExperience.trim()
         )
-        Log.d("onBoardingTest","converting to UserProfile $up")
         return up
     }
 
@@ -46,10 +56,9 @@ class OnboardingViewModel: ViewModel() {
         onFailure: (Exception) -> Unit
     ) {
         val userProfile = toUserProfile()
-        Log.d("onBoardingTest","saving to firestore $userProfile")
 
+        val uid = Firebase.auth.currentUser?.uid
         if (uid == null) {
-            Log.d("onBoardingTest","uid is null")
             onFailure(Exception("User not logged in"))
             return
         }
@@ -60,11 +69,41 @@ class OnboardingViewModel: ViewModel() {
                 .set(userProfile)
                 .addOnSuccessListener { onSuccess() }
                 .addOnFailureListener { exception -> onFailure(exception) }
-            Log.d("onBoardingTest","saved to firestore")
         }
         else{
-            Log.d("onBoardingTest","user profile is null")
             onFailure(Exception("Incomplete or invalid profile data"))
+        }
+    }
+
+    fun findUidFromFirestore(uid: String) {
+        viewModelScope.launch {
+            try {
+                val doc = Firebase.firestore.collection("users").document(uid).get().await()
+                if (doc.exists()) {
+                    // Profile exists
+                    _userProfileExists.value = true
+                    fetchUserProfile(uid)
+                } else {
+                    // Profile doesn't exist
+                    _userProfileExists.value = false
+                }
+            } catch (e: Exception) {
+                // Handle error
+                _userProfileExists.value = null
+                Log.e("SignInFlow", "Error checking profile", e)
+            }
+        }
+    }
+
+    private fun fetchUserProfile(uid:String) {
+        viewModelScope.launch {
+            try {
+                val doc = Firebase.firestore.collection("users").document(uid).get().await()
+                _userProfile.value = doc.toObject(UserProfile::class.java)
+            } catch (e: Exception) {
+                Log.e("SignInFlow", "Error fetching profile", e)
+                _userProfile.value = null
+            }
         }
     }
 }

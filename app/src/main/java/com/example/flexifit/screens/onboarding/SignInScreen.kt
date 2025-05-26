@@ -1,5 +1,6 @@
 package com.example.flexifit.screens.onboarding
 
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -40,14 +41,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.flexifit.LoginState
 import com.example.flexifit.R
 import com.example.flexifit.navigation.Routes
+import com.example.flexifit.utils.sharedPref
 import com.example.flexifit.viewmodels.AuthViewModel
+import com.example.flexifit.viewmodels.OnboardingViewModel
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @Composable
-fun SignInScreen(navController: NavHostController){
+fun SignInScreen(navController: NavHostController, onboardingViewModel: OnboardingViewModel){
     var email by remember {
         mutableStateOf("")
     }
@@ -64,21 +68,40 @@ fun SignInScreen(navController: NavHostController){
         authViewModel.googleSignIn(context,null)
     }
 
+    val userProfile by onboardingViewModel.userProfile.collectAsState()
+    val userProfileExists by onboardingViewModel.userProfileExists.collectAsState()
+
     LaunchedEffect(state) {
         when (state) {
             is LoginState.Success -> {
                 Toast.makeText(context, "Sign-In Successful!", Toast.LENGTH_SHORT).show()
-                navController.navigate(Routes.OnboardName.routes) {
-                    popUpTo(Routes.SignIn.routes) { inclusive = true }
+                val uid = Firebase.auth.currentUser?.uid
+                if(uid!=null){
+                    onboardingViewModel.findUidFromFirestore(uid)
                 }
-//                navController.navigate(Routes.BottomNav.routes) {
-//                    popUpTo(Routes.SignIn.routes) { inclusive = true }
-//                }
             }
             is LoginState.Error -> {
                 Toast.makeText(context, (state as LoginState.Error).message, Toast.LENGTH_SHORT).show()
             }
             else -> {}
+        }
+    }
+
+    LaunchedEffect(userProfile) {
+        if (userProfile != null) {
+            sharedPref.saveUserProfileLocally(context, userProfile!!)
+            navController.navigate(Routes.BottomNav.routes) {
+                popUpTo(0) { inclusive = true }
+                launchSingleTop = true
+            }
+        }
+    }
+
+    LaunchedEffect(userProfileExists) {
+        if (userProfileExists == false) {
+            navController.navigate(Routes.OnboardName.routes) {
+                popUpTo(Routes.SignIn.routes) { inclusive = true }
+            }
         }
     }
 
@@ -154,6 +177,6 @@ fun SignInScreen(navController: NavHostController){
 @Preview(showBackground = true)
 @Composable
 fun EmailView() {
-    val navController = rememberNavController()
-    SignInScreen(navController)
+//    val navController = rememberNavController()
+//    SignInScreen(navController)
 }

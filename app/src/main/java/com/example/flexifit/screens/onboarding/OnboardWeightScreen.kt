@@ -22,7 +22,6 @@ fun OnboardWeightScreen(navController: NavHostController, onboardingViewModel: O
         onValueChange = { weight = it },
         onNextClick = {
             onboardingViewModel.weight = weight
-            Log.d("onBoardingTest","Weight entered in VM $weight")
             navController.navigate(Routes.OnboardGender.routes)
         },
         keyboardType = KeyboardType.Decimal,

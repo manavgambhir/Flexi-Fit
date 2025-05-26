@@ -1,6 +1,7 @@
 package com.example.flexifit.screens
 
-import android.widget.Toast
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +14,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.example.flexifit.R
+import com.example.flexifit.data.models.UserProfile
 import com.example.flexifit.navigation.Routes
 import com.example.flexifit.utils.sharedPref
 import com.example.flexifit.viewmodels.OnboardingViewModel
@@ -28,22 +30,17 @@ fun SplashScreen(navController: NavHostController){
         )
     }
 
-    val context = LocalContext.current
     LaunchedEffect(true) {
         delay(2000)
+        // Gets the current user
         val currentUser = FirebaseAuth.getInstance().currentUser
-        if (sharedPref.getUserProfile(context) != null) {
+        if(currentUser!=null){
             navController.navigate(Routes.BottomNav.routes) {
                 popUpTo(0) { inclusive = true }
                 launchSingleTop = true
             }
         }
         else{
-            if (currentUser != null) {
-                FirebaseAuth.getInstance().signOut()
-                sharedPref.clearUserProfile(context)
-                Toast.makeText(context, "Progress lost due to incomplete profile. Please sign in again.", Toast.LENGTH_SHORT).show()
-            }
             navController.navigate(Routes.SignIn.routes){
                 popUpTo(0) { inclusive = true }
                 launchSingleTop = true

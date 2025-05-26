@@ -107,13 +107,10 @@ fun OnboardStrengthTScreen(
 
 fun saveData(context: Context, strengthTrainingLevel: String, onboardingViewModel: OnboardingViewModel, navController: NavHostController) {
     onboardingViewModel.strengthExperience = strengthTrainingLevel
-    Log.d("onBoardingTest","Strength Experience entered in VM $strengthTrainingLevel")
 
     onboardingViewModel.toUserProfile()?.let { profile->
         sharedPref.saveUserProfileLocally(context, profile)
     }
-
-    Log.d("onBoardingTest","Saved locally as ${sharedPref.getUserProfile(context)}")
 
     onboardingViewModel.saveProfileToFirestore(
         onSuccess = {

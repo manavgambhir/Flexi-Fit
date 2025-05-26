@@ -63,7 +63,6 @@ fun OnboardGenderScreen(navController: NavHostController, onboardingViewModel: O
                 onClick = {
                     gender = "Female"
                     onboardingViewModel.gender = gender
-                    Log.d("onBoardingTest","Gender selected as $gender")
                     navController.navigate(Routes.OnboardStrength.routes)
                 },
                 border = BorderStroke(1.dp, Color.Black),

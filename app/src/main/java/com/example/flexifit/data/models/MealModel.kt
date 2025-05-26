@@ -239,7 +239,7 @@ data class Recipe(
     val totalDaily: TotalDaily,
     val totalNutrients: TotalNutrients,
     val totalTime: Double,
-    val totalWeight: Double,
+    @SerializedName("totalWeight")val totalWeight: Double,
     val uri: String,
     val url: String,
     val yield: Int

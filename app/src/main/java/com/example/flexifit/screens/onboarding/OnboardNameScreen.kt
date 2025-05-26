@@ -21,7 +21,6 @@ fun OnboardNameScreen(navController: NavHostController, onboardingViewModel: Onb
         onValueChange = { name = it },
         onNextClick = {
             onboardingViewModel.name = name
-            Log.d("onBoardingTest","Name entered in VM $name")
             navController.navigate(Routes.OnboardDOB.routes)
         },
         keyboardType = KeyboardType.Text,

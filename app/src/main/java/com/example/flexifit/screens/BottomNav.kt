@@ -1,15 +1,28 @@
 package com.example.flexifit.screens
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -102,6 +115,28 @@ fun CustomAppBar(
     )
 }
 
+// TODO: TEST OUT THE TOP APP BAR WITH LOGO
+//val scrollFraction = scrollBehavior.state.collapsedFraction
+//    Column(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .background(MaterialTheme.colorScheme.primary)
+//    ) {
+//AnimatedVisibility(visible = scrollFraction < 0.5f) {
+//    Box(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .height(150.dp),
+//        contentAlignment = Alignment.Center
+//    ) {
+//        Image(
+//            painter = painterResource(R.drawable.flexifit_txt), // replace with your image
+//            contentDescription = "Header Text Img",
+//            modifier = Modifier.size(100.dp)
+//        )
+//    }
+//}
+
 @Composable
 fun MyBottomBar(navController1: NavController){
     val backStackEntry = navController1.currentBackStackEntryAsState()
@@ -147,3 +182,9 @@ fun MyBottomBar(navController1: NavController){
         }
     }
 }
+
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun bbscreenPrev(){
+//    BottomNav(rememberNavController())
+//}

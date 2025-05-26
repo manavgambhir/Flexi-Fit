@@ -22,7 +22,6 @@ fun OnboardHeightScreen(navController: NavHostController, onboardingViewModel: O
         onValueChange = { height = it },
         onNextClick = {
             onboardingViewModel.height = height
-            Log.d("onBoardingTest","Height entered in VM $height")
             navController.navigate(Routes.OnboardWeight.routes)
         },
         keyboardType = KeyboardType.Decimal,

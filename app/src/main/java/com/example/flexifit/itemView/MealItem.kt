@@ -17,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import coil3.compose.AsyncImage
 import coil3.request.ImageRequest
 import coil3.request.crossfade
@@ -29,7 +30,7 @@ fun MealItem(dishImgUrl: Any, dishName: String, dishQty:String, dishCal:Double, 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(85.dp)
+            .height(90.dp)
             .padding(5.dp),
         shape = RoundedCornerShape(12.dp),
         colors = CardColors(containerColor = Color.White, contentColor = Color.Black, disabledContentColor = Color.Black, disabledContainerColor = Color.White),
@@ -77,11 +78,13 @@ fun MealItem(dishImgUrl: Any, dishName: String, dishQty:String, dishCal:Double, 
                 modifier = Modifier.constrainAs(name) {
                     start.linkTo(image.end, margin = 12.dp)
                     top.linkTo(parent.top, margin = 13.dp)
+                    end.linkTo(parent.end, margin = 16.dp)
+                    width = Dimension.fillToConstraints
                 }
             )
 
             Text(
-                text = dishQty,
+                text = "$dishQty g",
                 fontSize = 14.sp,
                 color = Color.Black,
                 modifier = Modifier.constrainAs(qty) {
@@ -105,5 +108,5 @@ fun MealItem(dishImgUrl: Any, dishName: String, dishQty:String, dishCal:Double, 
 @Preview(showBackground = true)
 @Composable
 fun DishItemPreview() {
-    MealItem("https://cdn.pixabay.com/photo/2016/09/07/10/37/kermit-1651325_1280.jpg", "Rice", "1 Bowl", 136.0, "")
+    MealItem("https://cdn.pixabay.com/photo/2016/09/07/10/37/kermit-1651325_1280.jpg", "Rice with smabar in in idli with rasam and with chutney in", "1 Bowl", 136.0, "")
 }

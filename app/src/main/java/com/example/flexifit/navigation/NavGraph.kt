@@ -55,7 +55,7 @@ fun NavGraph(navHostController: NavHostController) {
         }
 
         composable(Routes.SignIn.routes){
-            SignInScreen(navHostController)
+            SignInScreen(navHostController,onboardingViewModel)
         }
 
         composable(Routes.OnboardName.routes){

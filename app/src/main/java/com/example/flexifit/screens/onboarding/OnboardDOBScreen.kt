@@ -22,7 +22,6 @@ fun OnboardDOBScreen(navController: NavHostController, onboardingViewModel: Onbo
         onValueChange = { dob = it },
         onNextClick = {
             onboardingViewModel.dob = dob
-            Log.d("onBoardingTest","DOB entered in VM $dob")
             navController.navigate(Routes.OnboardHeight.routes)
         },
         keyboardType = KeyboardType.Decimal,
