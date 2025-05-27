@@ -5,7 +5,7 @@ import okhttp3.*
 class MealQueryInterceptor:Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val original = chain.request()
-        val originalUrl = original.url()
+        val originalUrl = original.url
 
         val newUrl = originalUrl.newBuilder()
             .addQueryParameter("type", "public")

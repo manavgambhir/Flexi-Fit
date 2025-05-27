@@ -13,9 +13,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -70,6 +72,7 @@ fun DietScreen(navController: NavHostController){
     }
 
     if(showBottomSheet){
+        // Bottom Sheet
         ModalBottomSheet(
             modifier = Modifier.fillMaxSize(),
             sheetState = sheetState,
@@ -84,11 +87,42 @@ fun DietScreen(navController: NavHostController){
                     val age = findAge(userProfile.dob)
                     calory = ((10 * weight.toDouble()) + (6.25 * height.toDouble()) - (5 * age.toDouble()) + 5) * 1.2
                 }
-                val b = String.format(Locale.ENGLISH, "%.2f", bmi)
-                Box(modifier = Modifier.height(65.dp).width(140.dp).border(BorderStroke(2.dp,Color.Black)).align(Alignment.CenterHorizontally)){
-                    Text(text = b, fontSize = 54.sp)
+
+                // Progress Indicator
+                val normalizedBmi = ((bmi - 10f) / 30f).coerceIn(0.0, 1.0)
+                val bmiColor = when {
+                    bmi < 18.5 -> Color(0xFFFFD700)
+                    bmi < 25 -> Color(0xFF4CAF50)
+                    bmi < 30 -> Color(0xFFFFA500)
+                    else -> Color(0xFFF44336)
                 }
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(36.dp)
+                        .padding(horizontal = 16.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color.LightGray)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .fillMaxWidth(fraction = normalizedBmi.toFloat())
+                            .background(bmiColor)
+                    )
+
+                    val formattedBmi = String.format(Locale.ENGLISH, "%.1f", bmi)
+                    Text(
+                        text = "BMI: $formattedBmi",
+                        modifier = Modifier.align(Alignment.Center),
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                }
+
                 Spacer(modifier = Modifier.padding(7.dp))
+
                 goal = if(bmi<18.5) 0 else if(bmi>18.5 && bmi<25) 1 else if(bmi>=25 && bmi<30) 2 else 3
                 val goalTxt = when(goal){
                     0 -> "gaining your weight"
@@ -96,9 +130,9 @@ fun DietScreen(navController: NavHostController){
                     2 -> "reducing your weight"
                     else -> "your goal"
                 }
-                Text("Your BMI is $b, you should focus on $goalTxt. You would be suggested recipes for the same.",
+                Text("You should focus on $goalTxt. You would be suggested recipes for the same.",
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.padding(6.dp)
+                    modifier = Modifier.padding(7.dp)
                 )
             }
 
@@ -343,16 +377,6 @@ fun DietScreen(navController: NavHostController){
 
             }
 
-//            if(click==1){
-//                calories = (calory - cal+400).toString()
-//            }
-//            else if(click==2){
-//                calories = (calory - cal).toString()
-//            }
-//            else if(click==3){
-//                calories = (calory - cal-300).toString()
-//            }
-
             ElevatedButton(
                 onClick = {
                     if(bfastIngredient.isNotBlank() || lunchIngredient.isNotBlank() || dinnerIngredient.isNotBlank()){
@@ -428,24 +452,22 @@ fun DietTypeList(onItemClick: (String) -> Unit){
 
 val DietTypeList = listOf(
     DietType(R.drawable.gluton_free, "Gluten Free"),
-    DietType(R.drawable.gluton_free, "Keto-Friendly"),
-    DietType(R.drawable.gluton_free, "Vegan"),
-    DietType(R.drawable.gluton_free, "Vegetarian"),
-    DietType(R.drawable.gluton_free, "Peanut Free"),
-    DietType(R.drawable.gluton_free, "Fish Free"),
-    DietType(R.drawable.gluton_free, "Sugar Free"),
-    DietType(R.drawable.gluton_free, "Dairy Free"),
-    DietType(R.drawable.gluton_free, "Egg Free"),
-    DietType(R.drawable.gluton_free, "Immuno-Supportive"),
-    DietType(R.drawable.gluton_free, "Kidney Friendly"),
-    DietType(R.drawable.gluton_free, "Low Sugar"),
-    DietType(R.drawable.gluton_free, "Mustard Free"),
-    DietType(R.drawable.gluton_free, "No Oil Added"),
-    DietType(R.drawable.gluton_free, "Shellfish Free"),
+    DietType(R.drawable.keto, "Keto-Friendly"),
+    DietType(R.drawable.vegan, "Vegan"),
+    DietType(R.drawable.veg, "Vegetarian"),
+    DietType(R.drawable.no_peanut, "Peanut Free"),
+    DietType(R.drawable.no_fish, "Fish Free"),
+    DietType(R.drawable.no_sugar, "Sugar Free"),
+    DietType(R.drawable.dairy_free, "Dairy Free"),
+    DietType(R.drawable.no_egg, "Egg Free"),
+    DietType(R.drawable.immuno, "Immuno-Supportive"),
+    DietType(R.drawable.kidney, "Kidney Friendly"),
+    DietType(R.drawable.low_sugar, "Low Sugar"),
+    DietType(R.drawable.mustard, "Mustard Free"),
+    DietType(R.drawable.no_oil, "No Oil Added"),
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DietScreenPreview(){

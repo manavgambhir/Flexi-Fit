@@ -6,6 +6,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Refresh
@@ -25,6 +26,7 @@ import com.example.flexifit.data.models.MealModel
 import com.example.flexifit.data.models.MealPlanData
 import com.example.flexifit.data.models.Recipe
 import com.example.flexifit.itemView.MealItem
+import com.example.flexifit.navigation.Routes
 import com.example.flexifit.viewmodels.MealViewModel
 import java.util.Locale
 import java.util.Random
@@ -35,6 +37,8 @@ import kotlin.time.times
 @Composable
 fun MealPlanScreen(navController: NavHostController, mealPlanData: MealPlanData) {
     val context = LocalContext.current
+    var showDialog by remember { mutableStateOf(false) }
+    var dialogMessage by remember { mutableStateOf("") }
 
     val mealViewModel = remember { MealViewModel() }
     val breakfastResult by mealViewModel.breakfastResult.collectAsState()
@@ -59,7 +63,6 @@ fun MealPlanScreen(navController: NavHostController, mealPlanData: MealPlanData)
         mealViewModel.getMealPlan(bfastIg,health,"breakfast",bfastCal.toString())
         mealViewModel.getMealPlan(lunchIg,health,"lunch",lunchCal.toString())
         mealViewModel.getMealPlan(dinnerIg,health,"dinner",dinnerCal.toString())
-//        mealViewModel.getMealPlan("spinach","vegetarian","breakfast","100-700")
     }
 
     BackHandler {
@@ -72,15 +75,18 @@ fun MealPlanScreen(navController: NavHostController, mealPlanData: MealPlanData)
                                  fontSize = 24.sp,
                                  fontWeight = FontWeight.Bold
         )}, navigationIcon = {
-            IconButton(onClick = { navController.popBackStack() }) {
+            IconButton(onClick = {
+                dialogMessage = "Are you sure you want to go back?"
+                showDialog = true
+            }) {
                 Icon(
                     imageVector = Icons.Default.ArrowBack,
                     contentDescription = "Back"
                 )
         } }, actions = {
             IconButton(onClick = {
-                // TODO: Call API again to regenerate plan
-                navController.popBackStack()
+                dialogMessage = "Are you sure you want to regenerate meal plan?"
+                showDialog = true
             }) {
                 Icon(
                     imageVector = Icons.Default.Refresh,
@@ -98,6 +104,40 @@ fun MealPlanScreen(navController: NavHostController, mealPlanData: MealPlanData)
             MealPlanContent(mealPlanData, breakfastResult!!,bfastCal, lunchResult!!, lunchCal, dinnerResult!!, dinnerCal)
         }
     }
+
+    if (showDialog) {
+        ShowAlert(
+            message = dialogMessage,
+            onDismiss = { showDialog = false },
+            onConfirm = {
+                showDialog = false
+                navController.popBackStack()
+            }
+        )
+    }
+}
+
+@Composable
+fun ShowAlert(
+    message: String,
+    onDismiss: () -> Unit,
+    onConfirm: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text("Yes")
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text("No")
+            }
+        },
+        title = { Text("Confirm") },
+        text = { Text(message) }
+    )
 }
 
 @Composable
@@ -114,6 +154,18 @@ fun MealPlanContent(
     var lunchCheck by remember { mutableStateOf(false) }
     var dinnerCheck by remember { mutableStateOf(false) }
 
+    val bfastIndex = remember(breakfastResult) {
+        if (breakfastResult.count > 0) Random(System.nanoTime()).nextInt(breakfastResult.hits.size) else 0
+    }
+
+    val lunchIndex = remember(lunchResult) {
+        if (lunchResult.count > 0) Random(System.nanoTime()).nextInt(lunchResult.hits.size) else 0
+    }
+
+    val dinnerIndex = remember(dinnerResult) {
+        if (dinnerResult.count > 0) Random(System.nanoTime()).nextInt(dinnerResult.hits.size) else 0
+    }
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -124,6 +176,7 @@ fun MealPlanContent(
                 title = "BREAKFAST",
                 description = "There's nothing like starting the day with a healthy, filling breakfast",
                 result = breakfastResult,
+                randomIndex = bfastIndex,
                 netCalories = bfastCal,
                 isRice = mealPlanData.bfastRice,
                 chapatiCount = mealPlanData.bfastChapati,
@@ -139,6 +192,7 @@ fun MealPlanContent(
                 title = "LUNCH",
                 description = "Lunch, the sacred middle ground between morning hustle and afternoon grind.",
                 result = lunchResult,
+                randomIndex = lunchIndex,
                 netCalories = lunchCal,
                 isRice = mealPlanData.lunchRice,
                 chapatiCount = mealPlanData.lunchChapati,
@@ -154,6 +208,7 @@ fun MealPlanContent(
                 title = "DINNER",
                 description = "The best memories are made around the dinner table",
                 result = dinnerResult,
+                randomIndex = dinnerIndex,
                 netCalories = dinnerCal,
                 isRice = mealPlanData.dinnerRice,
                 chapatiCount = mealPlanData.dinnerChapati,
@@ -169,6 +224,7 @@ fun MealCard(
     title: String,
     description: String,
     result: MealModel,
+    randomIndex:Int,
     netCalories: Double,
     isRice: Boolean,
     chapatiCount: Int,
@@ -188,7 +244,8 @@ fun MealCard(
 
                 Text(text = title, fontSize = 21.sp, fontWeight = FontWeight.Bold)
 
-                Text(text = "600.0 cal", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.End, color = Color.Black)
+                val totalCal = netCalories + (if(isRice) 136.0 else 0.0) + (chapatiCount * 104.0)
+                Text(text = "$totalCal cal", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.End, color = Color.Black)
             }
 
             Spacer(modifier = Modifier.size(10.dp))
@@ -201,9 +258,8 @@ fun MealCard(
             Spacer(modifier = Modifier.size(8.dp))
 
             // API Call
-            if(result.count>0){
-                val i = Random(System.nanoTime()).nextInt(result.hits.size)
-                val mealRecipe = result.hits[i].recipe
+            if (result.count > 0 && randomIndex in result.hits.indices) {
+                val mealRecipe = result.hits[randomIndex].recipe
                 // in grams
                 val qty = ((mealRecipe.totalWeight / mealRecipe.calories) * netCalories.roundToInt())
                 val formattedQty = String.format(Locale.ENGLISH,"%.2f",qty)

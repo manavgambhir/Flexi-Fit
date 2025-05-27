@@ -1,10 +1,12 @@
 package com.example.flexifit.itemView
 
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -18,20 +20,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import coil3.compose.AsyncImage
-import coil3.request.ImageRequest
-import coil3.request.crossfade
-import coil3.request.error
-import coil3.request.placeholder
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.flexifit.R
 
 @Composable
 fun MealItem(dishImgUrl: Any, dishName: String, dishQty:String, dishCal:Double, dishDetailUrl:String?) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(90.dp)
-            .padding(5.dp),
+            .padding(5.dp)
+            .clickable(enabled = !dishDetailUrl.isNullOrEmpty()) {
+                dishDetailUrl?.let {
+                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
+                    context.startActivity(intent)
+                }
+            },
         shape = RoundedCornerShape(12.dp),
         colors = CardColors(containerColor = Color.White, contentColor = Color.Black, disabledContentColor = Color.Black, disabledContainerColor = Color.White),
         elevation = CardDefaults.cardElevation(4.dp)
@@ -42,9 +48,8 @@ fun MealItem(dishImgUrl: Any, dishName: String, dishQty:String, dishCal:Double, 
             val (image, name, qty, cal) = createRefs()
             val context = LocalContext.current
 
-            // TODO: Local image loading, but url from internet not loading
             Box(
-                modifier = Modifier.width(80.dp).fillMaxHeight()
+                modifier = Modifier.width(80.dp).fillMaxSize()
                     .constrainAs(image) {
                         start.linkTo(parent.start)
                         top.linkTo(parent.top)
@@ -52,20 +57,18 @@ fun MealItem(dishImgUrl: Any, dishName: String, dishQty:String, dishCal:Double, 
                     },
                 contentAlignment = Alignment.Center
             ){
-                val imageRequest = remember(dishImgUrl) {
-                    ImageRequest.Builder(context)
+                AsyncImage(
+                    model = ImageRequest.Builder(context)
                         .data(dishImgUrl)
                         .crossfade(true)
-                        .placeholder(R.drawable.gluton_free)
-                        .error(R.drawable.gluton_free)
-                        .build()
-                }
-
-                AsyncImage(
-                    model = imageRequest,
+                        .build(),
+                    contentScale = ContentScale.FillWidth,
                     contentDescription = "meal image",
-                    modifier = Modifier.padding(6.dp),
-                    placeholder = painterResource(R.drawable.gluton_free)
+                    placeholder = painterResource(R.drawable.gluton_free),
+                    error = painterResource(R.drawable.gluton_free),
+                    modifier = Modifier
+                        .padding(9.dp)
+                        .fillMaxSize()
                 )
             }
 
@@ -84,7 +87,7 @@ fun MealItem(dishImgUrl: Any, dishName: String, dishQty:String, dishCal:Double, 
             )
 
             Text(
-                text = "$dishQty g",
+                text = if(dishName=="Rice" || dishName=="Chapati") dishQty else "$dishQty g",
                 fontSize = 14.sp,
                 color = Color.Black,
                 modifier = Modifier.constrainAs(qty) {

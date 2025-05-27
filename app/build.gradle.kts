@@ -79,7 +79,7 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.runtime.livedata)
-    implementation(libs.coil.compose)
+    implementation("io.coil-kt:coil-compose:2.6.0")
 
     implementation (libs.play.services.auth.v2070)
     implementation(libs.androidx.credentials)

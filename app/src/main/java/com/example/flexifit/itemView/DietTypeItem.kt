@@ -45,7 +45,7 @@ fun DietTypeItem(dietType: DietType, onClick: () -> Unit){
         Box(modifier = Modifier.fillMaxSize()){
             Image(painter = painterResource(dietType.imageRes),
                   contentDescription = "Diet Type",
-                  contentScale = ContentScale.Crop
+                  contentScale = ContentScale.FillBounds
             )
 
             Box(
