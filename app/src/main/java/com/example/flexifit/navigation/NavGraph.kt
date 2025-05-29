@@ -1,6 +1,8 @@
 package com.example.flexifit.navigation
 
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -9,6 +11,7 @@ import androidx.navigation.compose.composable
 import com.example.flexifit.data.models.MealPlanData
 import com.example.flexifit.screens.BottomNav
 import com.example.flexifit.screens.DietScreen
+import com.example.flexifit.screens.GymPlanScreen
 import com.example.flexifit.screens.GymScreen
 import com.example.flexifit.screens.MealPlanScreen
 import com.example.flexifit.screens.onboarding.SignInScreen
@@ -23,6 +26,7 @@ import com.example.flexifit.screens.onboarding.OnboardWeightScreen
 import com.example.flexifit.viewmodels.OnboardingViewModel
 import com.google.gson.Gson
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(navHostController: NavHostController) {
     val onboardingViewModel:OnboardingViewModel = viewModel()
@@ -81,7 +85,13 @@ fun NavGraph(navHostController: NavHostController) {
         composable(Routes.OnboardStrength.routes){
             OnboardStrengthTScreen(navHostController,onboardingViewModel)
         }
+
+        composable(Routes.GymPlan.routes){
+            val bodyPart = it.arguments?.getString("bodyPart")
+            GymPlanScreen(navHostController,bodyPart)
+        }
 //
+
 //        composable(Routes.OtherUserProfile.routes){
 //            val data = it.arguments?.getString("data")
 //            OtherUserProfile(navController, data!!)

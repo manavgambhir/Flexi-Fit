@@ -2,6 +2,7 @@ package com.example.flexifit.navigation
 
 sealed class Routes(val routes:String) {
     object Gym:Routes("gym")
+    object GymPlan:Routes("gym_plan/{bodyPart}")
     object Yoga:Routes("yoga")
     object Diet:Routes("diet")
     object MealPlan:Routes("meal_plan/{mealData}")

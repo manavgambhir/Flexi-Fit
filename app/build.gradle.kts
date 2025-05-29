@@ -86,4 +86,8 @@ dependencies {
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
     implementation (libs.firebase.auth.ktx)
+
+    implementation (libs.tensorflow.lite)
+    implementation (libs.tensorflow.lite.gpu)
+    implementation (libs.tensorflow.lite.support)
 }
