@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.flexifit.data.models.MealPlanData
+import com.example.flexifit.data.models.Pose
 import com.example.flexifit.screens.BottomNav
 import com.example.flexifit.screens.DietScreen
 import com.example.flexifit.screens.GymPlanScreen
@@ -16,6 +17,7 @@ import com.example.flexifit.screens.GymScreen
 import com.example.flexifit.screens.MealPlanScreen
 import com.example.flexifit.screens.onboarding.SignInScreen
 import com.example.flexifit.screens.SplashScreen
+import com.example.flexifit.screens.YogaDetailScreen
 import com.example.flexifit.screens.YogaScreen
 import com.example.flexifit.screens.onboarding.OnboardDOBScreen
 import com.example.flexifit.screens.onboarding.OnboardGenderScreen
@@ -90,7 +92,13 @@ fun NavGraph(navHostController: NavHostController) {
             val bodyPart = it.arguments?.getString("bodyPart")
             GymPlanScreen(navHostController,bodyPart)
         }
-//
+
+        composable(Routes.YogaDetail.routes){
+            val json = it.arguments?.getString("yogaPose")
+            val decodeJson = Uri.decode(json)
+            val yogaPose = Gson().fromJson(decodeJson,Pose::class.java)
+            YogaDetailScreen(navHostController,yogaPose)
+        }
 
 //        composable(Routes.OtherUserProfile.routes){
 //            val data = it.arguments?.getString("data")

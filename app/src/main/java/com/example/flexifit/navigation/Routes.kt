@@ -4,9 +4,9 @@ sealed class Routes(val routes:String) {
     object Gym:Routes("gym")
     object GymPlan:Routes("gym_plan/{bodyPart}")
     object Yoga:Routes("yoga")
+    object YogaDetail:Routes("yoga_detail/{yogaPose}")
     object Diet:Routes("diet")
     object MealPlan:Routes("meal_plan/{mealData}")
-//    object WorkoutPlan:Routes("workout_plan")
     object BottomNav:Routes("bottomNav")
     object Splash:Routes("splash")
     object SignIn:Routes("sign_in")
@@ -18,9 +18,8 @@ sealed class Routes(val routes:String) {
     object OnboardStrength:Routes("onboard_strength")
 
 
+    //    object WorkoutPlan:Routes("workout_plan")
 //    object UserProfile:Routes("profile")
 
-//    object Login:Routes("login")
-//    object Register:Routes("register")
 //    object OtherUserProfile:Routes("other_user_profile/{data}")
 }

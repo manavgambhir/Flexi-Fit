@@ -94,7 +94,6 @@ fun GymPlanContent(bodyPart: String) {
     }
 
     Column {
-
         Row(modifier = Modifier.fillMaxWidth()
             .horizontalScroll(scrollState).padding(5.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
