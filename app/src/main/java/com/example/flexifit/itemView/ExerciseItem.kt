@@ -82,8 +82,8 @@ fun ExerciseItem(context:Context, exTitle:String, difficulty: String, exUrl:Stri
                     Icon(
                         imageVector = Icons.Rounded.PlayArrow,
                         contentDescription = "Video Play",
-                        modifier = Modifier.size(54.dp).clip(RoundedCornerShape(40.dp)).background(Color.White).padding(6.dp),
-                        tint = Color.Black
+                        modifier = Modifier.size(54.dp).clip(RoundedCornerShape(40.dp)).background(Color.White.copy(alpha = 0.8f)).padding(6.dp),
+                        tint = Color.DarkGray
                     )
                 }
             }

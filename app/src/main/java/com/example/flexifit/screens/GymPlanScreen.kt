@@ -88,15 +88,15 @@ fun GymPlanContent(bodyPart: String) {
     // Runs only once
     LaunchedEffect(bodyPart) {
         scope.launch {
-            fullData = loadData(context,bodyPart)
+            fullData = loadExerciseData(context,bodyPart)
             exerciseData = filterData(fullData, selectedChip)
         }
     }
 
-    Column(modifier = Modifier.padding(10.dp)) {
+    Column {
 
         Row(modifier = Modifier.fillMaxWidth()
-            .horizontalScroll(scrollState),
+            .horizontalScroll(scrollState).padding(5.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ){
             FilterChip(
@@ -210,7 +210,7 @@ fun GymPlanContent(bodyPart: String) {
     }
 }
 
-private fun loadData(context: Context, bodyPart:String): List<Data>{
+private fun loadExerciseData(context: Context, bodyPart:String): List<Data>{
     val text = context.assets.open("gym_data.json").bufferedReader().use { it.readText() }
     val allData = Gson().fromJson(text, AllData::class.java)
     return allData.data.filter {
