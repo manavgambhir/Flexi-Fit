@@ -3,6 +3,7 @@ package com.example.flexifit.itemView
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -11,11 +12,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -27,7 +33,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.flexifit.R
 
@@ -35,28 +42,50 @@ import com.example.flexifit.R
 fun ExerciseItem(context:Context, exTitle:String, difficulty: String, exUrl:String) {
     Card(modifier = Modifier.fillMaxWidth().padding(10.dp)
         .clickable {
-            exUrl.let {
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
-                context.startActivity(intent)
-            }
+            // TODO: Exercise Steps Screen
+//            navController.navigate()
         },
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
-            Box(modifier = Modifier.fillMaxWidth().clip(RoundedCornerShape(4.dp)).height(220.dp).background(Color.White)){
+            Box(modifier = Modifier.fillMaxWidth()
+                .clip(RoundedCornerShape(6.dp))
+                .height(220.dp)
+                .background(Color.White)
+                .clickable {
+                    exUrl.let {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
+                        context.startActivity(intent)
+                    }
+                }, contentAlignment = Alignment.Center
+            ){
                 val videoId = exUrl.substringAfterLast("/")
                 val thumbnailUrl = "https://img.youtube.com/vi/$videoId/0.jpg"
-                AsyncImage(
-                    modifier = Modifier.fillMaxSize(),
-                    model = ImageRequest.Builder(LocalContext.current)
+
+                val painter = rememberAsyncImagePainter(
+                    model = ImageRequest.Builder(context)
                         .data(thumbnailUrl)
                         .crossfade(true)
                         .placeholder(R.drawable.flexifit_ic)
                         .error(R.drawable.flexifit_ic)
-                        .build(),
+                        .build()
+                )
+
+                Image(
+                    painter = painter,
                     contentDescription = "Exercise Image",
+                    modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.FillBounds
                 )
+
+                if(painter.state is AsyncImagePainter.State.Success){
+                    Icon(
+                        imageVector = Icons.Rounded.PlayArrow,
+                        contentDescription = "Video Play",
+                        modifier = Modifier.size(54.dp).clip(RoundedCornerShape(40.dp)).background(Color.White).padding(6.dp),
+                        tint = Color.Black
+                    )
+                }
             }
 
             Text(text = exTitle,
@@ -98,5 +127,5 @@ fun ExerciseItem(context:Context, exTitle:String, difficulty: String, exUrl:Stri
 @Preview(showBackground = true)
 @Composable
 fun ExerciseItemPreview() {
-//    ExerciseItem("Push Ups","Intermediate","https://img.youtube.com/vi/YaXPRqUwItQ/0.jpg")
+    ExerciseItem(LocalContext.current,"Push Ups","Intermediate","https://img.youtube.com/vi/YaXPRqUwItQ/0.jpg")
 }
