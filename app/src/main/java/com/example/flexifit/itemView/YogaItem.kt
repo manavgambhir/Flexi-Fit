@@ -41,10 +41,9 @@ import com.google.gson.Gson
 fun YogaItem(context: Context, navController: NavHostController, yogaPose: Pose) {
     Card(modifier = Modifier.fillMaxWidth().height(250.dp).padding(10.dp)
         .clickable {
-            // TODO: Detail Screen
             val json = Gson().toJson(yogaPose)
             val encodeJson = Uri.encode(json)
-            val route = Routes.YogaDetail.routes.replace("{yogaPose}",encodeJson)
+            val route = Routes.ExerciseDetailYoga.routes.replace("{yogaPose}",encodeJson)
             navController.navigate(route)
         },
         elevation = CardDefaults.cardElevation(6.dp)

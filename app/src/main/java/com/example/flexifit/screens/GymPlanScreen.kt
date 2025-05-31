@@ -71,13 +71,13 @@ fun GymPlanScreen(navController: NavHostController, bodyPart: String?){
             }
         }
         else{
-            GymPlanContent(bodyPart)
+            GymPlanContent(navController,bodyPart)
         }
     }
 }
 
 @Composable
-fun GymPlanContent(bodyPart: String) {
+fun GymPlanContent(navController:NavHostController, bodyPart: String) {
     val scrollState = rememberScrollState()
     var selectedChip by remember { mutableStateOf("Stretches") }
     val context = LocalContext.current
@@ -202,7 +202,7 @@ fun GymPlanContent(bodyPart: String) {
         else {
             LazyColumn{
                 items(exerciseData.size) { it ->
-                    ExerciseItem(context,exerciseData[it].title,exerciseData[it].difficulty,exerciseData[it].video_tutorials[0])
+                    ExerciseItem(context, navController = navController, exerciseData[it])
                 }
             }
         }
@@ -226,5 +226,5 @@ private fun filterData(data:List<Data>, category: String): List<Data> {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun PlanScreenPreview(){
-    GymPlanScreen(rememberNavController(), "Chest")
+//    GymPlanScreen(rememberNavController(), "Chest")
 }

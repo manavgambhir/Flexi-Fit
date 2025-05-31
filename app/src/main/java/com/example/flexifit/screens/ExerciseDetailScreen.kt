@@ -1,6 +1,6 @@
 package com.example.flexifit.screens
 
-import androidx.compose.foundation.BorderStroke
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -29,30 +29,78 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.alpha
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.flexifit.R
+import com.example.flexifit.data.models.Data
+import com.example.flexifit.data.models.ExerciseData
 import com.example.flexifit.data.models.Pose
 
+// Polymorphism - Overloading
 @Composable
-fun YogaDetailScreen(navController: NavHostController, yoga: Pose) {
-    val pagerState = rememberPagerState(pageCount = { yoga.yoga_instruction.size })
+fun ExerciseDetailScreen(navController: NavHostController, yoga: Pose){
+    CommonExerciseScreen(
+        navController = navController,
+        title = yoga.english_name,
+        subtitle = yoga.sanskrit_name,
+        imageUrl = yoga.image_url,
+        description = yoga.yoga_description,
+        steps = yoga.yoga_instruction,
+        isYoga = true
+    )
+}
+
+@Composable
+fun ExerciseDetailScreen(navController: NavHostController, exerciseData: ExerciseData){
+    val data = exerciseData.data
+    val exUrl = exerciseData.thumbnailUrl
+    val exerciseSteps = data.text_tutorials.map { it.text }
+
+    CommonExerciseScreen(
+        navController = navController,
+        title = data.title,
+        subtitle = data.difficulty,
+        imageUrl = exUrl,
+        steps = exerciseSteps,
+        isYoga = false
+    )
+}
+
+@Composable
+fun CommonExerciseScreen(
+    navController: NavHostController,
+    title: String,
+    subtitle: String,
+    imageUrl: String,
+    description: String? = null,
+    steps: List<String>,
+    isYoga: Boolean
+) {
+    val pagerState = rememberPagerState(pageCount = { steps.size })
     val scrollState = rememberScrollState()
-    val steps = yoga.yoga_instruction
+    val context = LocalContext.current
     Column(Modifier.statusBarsPadding()) {
         Box(modifier = Modifier
             .fillMaxWidth()
             .height(260.dp)
-            .background(Color.Black)
+            .background(Color.White)
         ){
             AsyncImage(
-                model = yoga.image_url,
+                model = ImageRequest.Builder(context)
+                    .data(imageUrl)
+                    .placeholder(R.drawable.flexifit_ic)
+                    .error(R.drawable.flexifit_ic)
+                    .build(),
                 modifier = Modifier.fillMaxSize(),
-                contentDescription = "Yoga Pose",
+                contentDescription = "Exercise Image",
                 contentScale = ContentScale.FillBounds
             )
 
@@ -61,24 +109,33 @@ fun YogaDetailScreen(navController: NavHostController, yoga: Pose) {
             }, modifier = Modifier.padding(10.dp)){
                 Icon(
                     imageVector = Icons.Default.Close,
-                    contentDescription = "Back",
+                    contentDescription = "Close",
                     modifier = Modifier
                         .clip(RoundedCornerShape(40.dp))
-                        .border(2.dp, Color.Black, RoundedCornerShape(40.dp))
-                        .background(Color.White)
-                        .padding(3.dp)
+                        .border(1.dp, Color.Black, RoundedCornerShape(40.dp))
+                        .background(Color.White.copy(alpha = 0.7f))
+                        .padding(6.dp)
                         .size(30.dp),
                 )
             }
         }
 
-        Column(modifier = Modifier.padding(10.dp).verticalScroll(scrollState)) {
-            Text(text = "${yoga.english_name} Pose", fontSize = 25.sp, fontWeight = FontWeight.Bold)
-            Text(text = yoga.sanskrit_name, fontSize = 18.sp, color = Color.Gray)
+        Column(modifier = Modifier.padding(start = 12.dp, end = 12.dp, bottom = 12.dp).verticalScroll(scrollState)) {
+            Spacer(modifier = Modifier.size(10.dp))
+
+            Text(text = if(isYoga) "$title Pose" else title,
+                fontSize = 25.sp,
+                fontWeight = FontWeight.Bold
+            )
+
+            Text(text = subtitle, fontSize = 18.sp, color = Color.Gray)
             
             Spacer(modifier = Modifier.size(10.dp))
-            Text(text = yoga.yoga_description,
-                fontSize = 16.sp)
+
+            if (description != null) {
+                Text(text = description,
+                    fontSize = 16.sp)
+            }
 
             Spacer(modifier = Modifier.size(20.dp))
 
@@ -96,7 +153,7 @@ fun YogaDetailScreen(navController: NavHostController, yoga: Pose) {
                 ) { it ->
                     Column(
                         modifier = Modifier
-                            .fillMaxWidth()
+                            .fillMaxSize()
                             .padding(4.dp),
                     ) {
                         Spacer(modifier = Modifier.size(10.dp))
@@ -137,9 +194,6 @@ fun YogaDetailScreen(navController: NavHostController, yoga: Pose) {
             }
 
         }
-
-
-
     }
 }
 

@@ -3,6 +3,7 @@ package com.example.flexifit.itemView
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,21 +34,34 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.flexifit.R
+import com.example.flexifit.data.models.Data
+import com.example.flexifit.data.models.ExerciseData
+import com.example.flexifit.navigation.Routes
+import com.google.gson.Gson
 
 @Composable
-fun ExerciseItem(context:Context, exTitle:String, difficulty: String, exUrl:String) {
+fun ExerciseItem(context:Context, navController: NavHostController, exercise:Data) {
+    val exUrl = exercise.video_tutorials[0]
+    val videoId = exUrl.substringAfterLast("/")
+    val thumbnailUrl = "https://img.youtube.com/vi/$videoId/0.jpg"
+
     Card(modifier = Modifier.fillMaxWidth().padding(10.dp)
         .clickable {
-            // TODO: Exercise Steps Screen
-//            navController.navigate()
+            val exerciseData = ExerciseData(data = exercise, thumbnailUrl = thumbnailUrl)
+            val json = Gson().toJson(exerciseData)
+            val encodeJson = Uri.encode(json)
+            val route = Routes.ExerciseDetailGym.routes.replace("{exData}",encodeJson)
+            navController.navigate(route)
         },
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
+
             Box(modifier = Modifier.fillMaxWidth()
                 .clip(RoundedCornerShape(6.dp))
                 .height(220.dp)
@@ -59,9 +73,6 @@ fun ExerciseItem(context:Context, exTitle:String, difficulty: String, exUrl:Stri
                     }
                 }, contentAlignment = Alignment.Center
             ){
-                val videoId = exUrl.substringAfterLast("/")
-                val thumbnailUrl = "https://img.youtube.com/vi/$videoId/0.jpg"
-
                 val painter = rememberAsyncImagePainter(
                     model = ImageRequest.Builder(context)
                         .data(thumbnailUrl)
@@ -88,7 +99,7 @@ fun ExerciseItem(context:Context, exTitle:String, difficulty: String, exUrl:Stri
                 }
             }
 
-            Text(text = exTitle,
+            Text(text = exercise.title,
                 color = Color.Black,
                 fontFamily = FontFamily.Default,
                 fontSize = 21.sp,
@@ -100,7 +111,7 @@ fun ExerciseItem(context:Context, exTitle:String, difficulty: String, exUrl:Stri
                 overflow = TextOverflow.Clip
             )
 
-            Text(text = difficulty,
+            Text(text = exercise.difficulty,
                 color = Color.DarkGray,
                 fontFamily = FontFamily.Default,
                 fontSize = 16.sp,
@@ -127,5 +138,5 @@ fun ExerciseItem(context:Context, exTitle:String, difficulty: String, exUrl:Stri
 @Preview(showBackground = true)
 @Composable
 fun ExerciseItemPreview() {
-    ExerciseItem(LocalContext.current,"Push Ups","Intermediate","https://img.youtube.com/vi/YaXPRqUwItQ/0.jpg")
+//    ExerciseItem(LocalContext.current,"Push Ups","Intermediate","https://img.youtube.com/vi/YaXPRqUwItQ/0.jpg")
 }

@@ -3,12 +3,18 @@ package com.example.flexifit.navigation
 sealed class Routes(val routes:String) {
     object Gym:Routes("gym")
     object GymPlan:Routes("gym_plan/{bodyPart}")
+    object ExerciseDetailGym:Routes("exercise_details_gym/{exData}")
+
     object Yoga:Routes("yoga")
-    object YogaDetail:Routes("yoga_detail/{yogaPose}")
+    object ExerciseDetailYoga:Routes("exercise_detail_yoga/{yogaPose}")
+
+
     object Diet:Routes("diet")
     object MealPlan:Routes("meal_plan/{mealData}")
+
     object BottomNav:Routes("bottomNav")
     object Splash:Routes("splash")
+
     object SignIn:Routes("sign_in")
     object OnboardName:Routes("onboard_name")
     object OnboardDOB:Routes("onboard_dob")

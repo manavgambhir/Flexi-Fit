@@ -2,22 +2,25 @@ package com.example.flexifit.navigation
 
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.flexifit.data.models.Data
+import com.example.flexifit.data.models.ExerciseData
 import com.example.flexifit.data.models.MealPlanData
 import com.example.flexifit.data.models.Pose
 import com.example.flexifit.screens.BottomNav
 import com.example.flexifit.screens.DietScreen
+import com.example.flexifit.screens.ExerciseDetailScreen
 import com.example.flexifit.screens.GymPlanScreen
 import com.example.flexifit.screens.GymScreen
 import com.example.flexifit.screens.MealPlanScreen
 import com.example.flexifit.screens.onboarding.SignInScreen
 import com.example.flexifit.screens.SplashScreen
-import com.example.flexifit.screens.YogaDetailScreen
 import com.example.flexifit.screens.YogaScreen
 import com.example.flexifit.screens.onboarding.OnboardDOBScreen
 import com.example.flexifit.screens.onboarding.OnboardGenderScreen
@@ -93,12 +96,20 @@ fun NavGraph(navHostController: NavHostController) {
             GymPlanScreen(navHostController,bodyPart)
         }
 
-        composable(Routes.YogaDetail.routes){
+        composable(Routes.ExerciseDetailGym.routes){
+            val json = it.arguments?.getString("exData")
+            val decodeJson = Uri.decode(json)
+            val exercise = Gson().fromJson(decodeJson, ExerciseData::class.java)
+            ExerciseDetailScreen(navHostController,exercise)
+        }
+
+        composable(Routes.ExerciseDetailYoga.routes){
             val json = it.arguments?.getString("yogaPose")
             val decodeJson = Uri.decode(json)
-            val yogaPose = Gson().fromJson(decodeJson,Pose::class.java)
-            YogaDetailScreen(navHostController,yogaPose)
+            val yoga = Gson().fromJson(decodeJson,Pose::class.java)
+            ExerciseDetailScreen(navHostController,yoga)
         }
+
 
 //        composable(Routes.OtherUserProfile.routes){
 //            val data = it.arguments?.getString("data")
