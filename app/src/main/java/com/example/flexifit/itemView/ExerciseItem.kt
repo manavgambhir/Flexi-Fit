@@ -66,12 +66,13 @@ fun ExerciseItem(context:Context, navController: NavHostController, exercise:Dat
                 .clip(RoundedCornerShape(6.dp))
                 .height(220.dp)
                 .background(Color.White)
-                .clickable {
-                    exUrl.let {
-                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
-                        context.startActivity(intent)
-                    }
-                }, contentAlignment = Alignment.Center
+//                .clickable {
+//                    exUrl.let {
+//                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(it))
+//                        context.startActivity(intent)
+//                    }
+//                }
+                ,contentAlignment = Alignment.Center
             ){
                 val painter = rememberAsyncImagePainter(
                     model = ImageRequest.Builder(context)
@@ -89,14 +90,14 @@ fun ExerciseItem(context:Context, navController: NavHostController, exercise:Dat
                     contentScale = ContentScale.FillBounds
                 )
 
-                if(painter.state is AsyncImagePainter.State.Success){
-                    Icon(
-                        imageVector = Icons.Rounded.PlayArrow,
-                        contentDescription = "Video Play",
-                        modifier = Modifier.size(54.dp).clip(RoundedCornerShape(40.dp)).background(Color.White.copy(alpha = 0.8f)).padding(6.dp),
-                        tint = Color.DarkGray
-                    )
-                }
+//                if(painter.state is AsyncImagePainter.State.Success){
+//                    Icon(
+//                        imageVector = Icons.Rounded.PlayArrow,
+//                        contentDescription = "Video Play",
+//                        modifier = Modifier.size(54.dp).clip(RoundedCornerShape(40.dp)).background(Color.White.copy(alpha = 0.8f)).padding(6.dp),
+//                        tint = Color.DarkGray
+//                    )
+//                }
             }
 
             Text(text = exercise.title,

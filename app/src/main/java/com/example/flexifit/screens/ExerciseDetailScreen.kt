@@ -1,8 +1,11 @@
 package com.example.flexifit.screens
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,10 +24,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -37,7 +42,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.alpha
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
 import coil.request.ImageRequest
 import com.example.flexifit.R
 import com.example.flexifit.data.models.Data
@@ -69,6 +76,7 @@ fun ExerciseDetailScreen(navController: NavHostController, exerciseData: Exercis
         title = data.title,
         subtitle = data.difficulty,
         imageUrl = exUrl,
+        videoUrl = data.video_tutorials[0],
         steps = exerciseSteps,
         isYoga = false
     )
@@ -80,6 +88,7 @@ fun CommonExerciseScreen(
     title: String,
     subtitle: String,
     imageUrl: String,
+    videoUrl: String? = null,
     description: String? = null,
     steps: List<String>,
     isYoga: Boolean
@@ -103,6 +112,23 @@ fun CommonExerciseScreen(
                 contentDescription = "Exercise Image",
                 contentScale = ContentScale.FillBounds
             )
+
+            if(videoUrl!=null){
+                Box(modifier = Modifier.fillMaxSize()
+                    .clickable {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl))
+                        context.startActivity(intent)
+                    },
+                    contentAlignment = Alignment.Center
+                ){
+                    Icon(
+                        imageVector = Icons.Rounded.PlayArrow,
+                        contentDescription = "Video Play",
+                        modifier = Modifier.size(54.dp).clip(RoundedCornerShape(40.dp)).background(Color.Black.copy(alpha = 0.8f)).padding(6.dp),
+                        tint = Color.White
+                    )
+                }
+            }
 
             IconButton(onClick = {
                 navController.popBackStack()
@@ -218,21 +244,21 @@ fun CommonExerciseScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun DetailScreenPreview(){
-//    YogaDetailScreen(rememberNavController(),
-//        Pose("Tree Pose",
-//            "Pose",
-//            "This is a yoga pose",
-//            "",
-//            "",
-//            listOf(""),
-//            "",
-//            listOf(
-//                "Stand in Tadasana. Inhale and raise your arms overhead so that your biceps are just slightly in front of your ears. Either keep the arms parallel, palms facing inward, or join the palms.",
-//                "Exhale and bend your knees so that your thighs are as parallel to the floor as possible. Your knees will project out over your feet, and your trunk will lean slightly forward over your thighs until your front torso forms approximately a right angle with the tops of your thighs.",
-//                "Keep your inner thighs parallel to each other and press the heads of the thigh bones down toward your heels.",
-//                "Firm your shoulder blades against your back. Direct your tailbone down toward the floor and in toward your pubis to keep your lower back long.",
-//                "Stay for 30 seconds to a minute. To come out of this pose, straighten your knees with an inhalation, lifting strongly through your arms. Exhale and release your arms to your sides into Tadasana."
-//            )
-//        )
-//    )
+    ExerciseDetailScreen(rememberNavController(),
+        Pose("Tree Pose",
+            "Pose",
+            "This is a yoga pose",
+            "",
+            "",
+            listOf(""),
+            "",
+            listOf(
+                "Stand in Tadasana. Inhale and raise your arms overhead so that your biceps are just slightly in front of your ears. Either keep the arms parallel, palms facing inward, or join the palms.",
+                "Exhale and bend your knees so that your thighs are as parallel to the floor as possible. Your knees will project out over your feet, and your trunk will lean slightly forward over your thighs until your front torso forms approximately a right angle with the tops of your thighs.",
+                "Keep your inner thighs parallel to each other and press the heads of the thigh bones down toward your heels.",
+                "Firm your shoulder blades against your back. Direct your tailbone down toward the floor and in toward your pubis to keep your lower back long.",
+                "Stay for 30 seconds to a minute. To come out of this pose, straighten your knees with an inhalation, lifting strongly through your arms. Exhale and release your arms to your sides into Tadasana."
+            )
+        )
+    )
 }
