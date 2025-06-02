@@ -48,7 +48,9 @@ import com.example.flexifit.utils.sharedPref
 import com.example.flexifit.viewmodels.AuthViewModel
 import com.example.flexifit.viewmodels.OnboardingViewModel
 import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import kotlinx.coroutines.delay
 
 @Composable
 fun SignInScreen(navController: NavHostController, onboardingViewModel: OnboardingViewModel){
@@ -87,8 +89,9 @@ fun SignInScreen(navController: NavHostController, onboardingViewModel: Onboardi
         }
     }
 
-    LaunchedEffect(userProfile) {
-        if (userProfile != null) {
+    val firebaseUser = FirebaseAuth.getInstance().currentUser
+    LaunchedEffect(userProfile, firebaseUser) {
+        if (firebaseUser != null && userProfile != null) {
             sharedPref.saveUserProfileLocally(context, userProfile!!)
             navController.navigate(Routes.BottomNav.routes) {
                 popUpTo(0) { inclusive = true }
@@ -97,8 +100,8 @@ fun SignInScreen(navController: NavHostController, onboardingViewModel: Onboardi
         }
     }
 
-    LaunchedEffect(userProfileExists) {
-        if (userProfileExists == false) {
+    LaunchedEffect(userProfileExists, firebaseUser) {
+        if (firebaseUser != null && userProfileExists == false) {
             navController.navigate(Routes.OnboardName.routes) {
                 popUpTo(Routes.SignIn.routes) { inclusive = true }
             }

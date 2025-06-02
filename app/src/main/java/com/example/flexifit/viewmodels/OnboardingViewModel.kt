@@ -32,25 +32,6 @@ class OnboardingViewModel: ViewModel() {
     private val _userProfileExists = MutableStateFlow<Boolean?>(null)
     val userProfileExists: StateFlow<Boolean?> = _userProfileExists.asStateFlow()
 
-    fun toUserProfile(): UserProfile? {
-        if (name.isBlank() || dob.isBlank() || gender.isBlank() ||
-            weight.toFloatOrNull() == null || height.toFloatOrNull() == null ||
-            strengthExperience.isBlank()
-        ) {
-            return null
-        }
-
-        val up = UserProfile(
-            name = name.trim(),
-            dob = dob.trim(),
-            gender = gender.trim(),
-            weight = weight.toDouble(),
-            height = height.toDouble(),
-            strengthExperience = strengthExperience.trim()
-        )
-        return up
-    }
-
     fun saveProfileToFirestore(
         onSuccess: () -> Unit,
         onFailure: (Exception) -> Unit
@@ -82,28 +63,37 @@ class OnboardingViewModel: ViewModel() {
                 if (doc.exists()) {
                     // Profile exists
                     _userProfileExists.value = true
-                    fetchUserProfile(uid)
+                    _userProfile.value = doc.toObject(UserProfile::class.java)
                 } else {
                     // Profile doesn't exist
                     _userProfileExists.value = false
+                    _userProfile.value = null
                 }
             } catch (e: Exception) {
                 // Handle error
                 _userProfileExists.value = null
+                _userProfile.value = null
                 Log.e("SignInFlow", "Error checking profile", e)
             }
         }
     }
 
-    private fun fetchUserProfile(uid:String) {
-        viewModelScope.launch {
-            try {
-                val doc = Firebase.firestore.collection("users").document(uid).get().await()
-                _userProfile.value = doc.toObject(UserProfile::class.java)
-            } catch (e: Exception) {
-                Log.e("SignInFlow", "Error fetching profile", e)
-                _userProfile.value = null
-            }
+    fun toUserProfile(): UserProfile? {
+        if (name.isBlank() || dob.isBlank() || gender.isBlank() ||
+            weight.toFloatOrNull() == null || height.toFloatOrNull() == null ||
+            strengthExperience.isBlank()
+        ) {
+            return null
         }
+
+        val up = UserProfile(
+            name = name.trim(),
+            dob = dob.trim(),
+            gender = gender.trim(),
+            weight = weight.toDouble(),
+            height = height.toDouble(),
+            strengthExperience = strengthExperience.trim()
+        )
+        return up
     }
 }

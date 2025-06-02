@@ -6,6 +6,7 @@ import android.provider.Settings
 import android.util.Log
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.result.ActivityResult
+import androidx.compose.ui.platform.LocalContext
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
@@ -14,11 +15,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flexifit.LoginState
 import com.example.flexifit.R
+import com.example.flexifit.utils.sharedPref
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential.Companion.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -28,6 +31,15 @@ class AuthViewModel() : ViewModel() {
     private val auth = FirebaseAuth.getInstance()
     private val _loginState = MutableStateFlow<LoginState>(LoginState.Idle)
     val loginState: StateFlow<LoginState> = _loginState
+
+    init{
+        checkLoginState()
+    }
+
+    private fun checkLoginState() {
+        val user = auth.currentUser
+        _loginState.value = if(user!=null) LoginState.Success else LoginState.Idle
+    }
 
     fun googleSignIn(context: Context,launcher: ManagedActivityResultLauncher<Intent,ActivityResult>?){
         val credentialManager = CredentialManager.create(context)
@@ -43,6 +55,7 @@ class AuthViewModel() : ViewModel() {
             .build()
 
         viewModelScope.launch {
+            _loginState.value = LoginState.Loading
             try{
                 val result = credentialManager.getCredential(context,request)
                 val credential = result.credential
@@ -76,11 +89,15 @@ class AuthViewModel() : ViewModel() {
     }
 
     fun signOut() {
-        try {
-            auth.signOut()
-            _loginState.value = LoginState.Idle
-        } catch (e: Exception) {
-            Log.e("AuthError", "Unable to sign out", e)
+        viewModelScope.launch {
+            _loginState.value = LoginState.Loading
+            try {
+                auth.signOut()
+                _loginState.value = LoginState.Idle
+            } catch (e: Exception) {
+                Log.e("AuthError", "Unable to sign out", e)
+                _loginState.value = LoginState.Error("Sign out failed")
+            }
         }
     }
 }

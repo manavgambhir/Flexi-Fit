@@ -1,5 +1,9 @@
 package com.example.flexifit.screens
 
+import android.net.Uri
+import android.os.Build
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -12,6 +16,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -19,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -34,7 +40,10 @@ import androidx.navigation.compose.rememberNavController
 import com.example.flexifit.R
 import com.example.flexifit.data.models.BottomNavItem
 import com.example.flexifit.navigation.Routes
+import com.example.flexifit.utils.sharedPref
+import com.google.gson.Gson
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomNav(navController: NavHostController) {
@@ -47,7 +56,7 @@ fun BottomNav(navController: NavHostController) {
              topBar = {
                  CustomAppBar(scrollBehavior = scrollBehavior,
                               currentRoute = currentRoute,
-                              navController = navController1)
+                              navController = navController)
              },
              bottomBar = { MyBottomBar(navController1) }
     ) { innerPadding->
@@ -82,6 +91,7 @@ fun CustomAppBar(
     currentRoute: String?,
     navController: NavHostController
 ) {
+    val context = LocalContext.current
     val title = when (currentRoute) {
         Routes.Diet.routes -> "Choose Your Diet Plan"
         Routes.Gym.routes -> "Gym Workouts"
@@ -106,9 +116,24 @@ fun CustomAppBar(
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_back),
-                        contentDescription = "Back"
+                        contentDescription = "Back",
                     )
                 }
+            }
+        },
+        actions = {
+            IconButton(onClick = {
+                val user = sharedPref.getUserProfile(context)
+                val json = Gson().toJson(user)
+                val encodedJson = Uri.encode(json)
+                val route = Routes.UserAccount.routes.replace("{userData}",encodedJson)
+                navController.navigate(route)
+            }) {
+                Icon(
+                    imageVector = Icons.Default.AccountCircle,
+                    contentDescription = "Profile",
+                    modifier = Modifier.size(33.dp)
+                )
             }
         },
         scrollBehavior = scrollBehavior

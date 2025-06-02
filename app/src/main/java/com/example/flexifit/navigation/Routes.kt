@@ -12,8 +12,9 @@ sealed class Routes(val routes:String) {
     object Diet:Routes("diet")
     object MealPlan:Routes("meal_plan/{mealData}")
 
-    object BottomNav:Routes("bottomNav")
     object Splash:Routes("splash")
+    object BottomNav:Routes("bottomNav")
+    object UserAccount:Routes("user_acc/{userData}")
 
     object SignIn:Routes("sign_in")
     object OnboardName:Routes("onboard_name")
@@ -24,8 +25,10 @@ sealed class Routes(val routes:String) {
     object OnboardStrength:Routes("onboard_strength")
 
 
+
+
     //    object WorkoutPlan:Routes("workout_plan")
-//    object UserProfile:Routes("profile")
+
 
 //    object OtherUserProfile:Routes("other_user_profile/{data}")
 }

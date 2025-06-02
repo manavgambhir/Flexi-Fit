@@ -400,9 +400,9 @@ fun DietScreen(navController: NavHostController){
                         }
 
                         calories = when(goal){
-                            0 -> calory - cal - 400
+                            0 -> calory - cal + 300
                             1 -> calory - cal
-                            2 -> calory - cal + 300
+                            2 -> calory - cal - 400
                             else -> calory - cal
                         }
 
