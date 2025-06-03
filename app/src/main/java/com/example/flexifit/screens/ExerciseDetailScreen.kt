@@ -3,6 +3,7 @@ package com.example.flexifit.screens
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -25,8 +26,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -61,6 +66,7 @@ fun ExerciseDetailScreen(navController: NavHostController, yoga: Pose){
         imageUrl = yoga.image_url,
         description = yoga.yoga_description,
         steps = yoga.yoga_instruction,
+        tfFile = if(yoga.file_name.isNotEmpty()) yoga.file_name else null,
         isYoga = true
     )
 }
@@ -78,6 +84,7 @@ fun ExerciseDetailScreen(navController: NavHostController, exerciseData: Exercis
         imageUrl = exUrl,
         videoUrl = data.video_tutorials[0],
         steps = exerciseSteps,
+        tfFile = if(!data.file_name.isNullOrEmpty()) data.file_name else null,
         isYoga = false
     )
 }
@@ -91,6 +98,7 @@ fun CommonExerciseScreen(
     videoUrl: String? = null,
     description: String? = null,
     steps: List<String>,
+    tfFile: String? = null,
     isYoga: Boolean
 ) {
     val pagerState = rememberPagerState(pageCount = { steps.size })
@@ -216,6 +224,23 @@ fun CommonExerciseScreen(
                         color = if (index == pagerState.currentPage) Color.Black else Color.Gray,
                         modifier = Modifier.padding(horizontal = 2.dp)
                     )
+                }
+            }
+
+            if(tfFile!=null){
+                Spacer(modifier = Modifier.size(25.dp))
+
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+                    Button(onClick = {
+
+                    }, colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
+                    ){
+                        Text(text = "Perform " + if(isYoga) "Asana" else "Exercise",
+                            color = Color.White,
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(horizontal = 25.dp, vertical = 5.dp)
+                        )
+                    }
                 }
             }
 

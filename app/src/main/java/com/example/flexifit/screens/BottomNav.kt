@@ -51,7 +51,8 @@ fun BottomNav(navController: NavHostController) {
     val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
     // Get current route
     val currentRoute = navController1.currentBackStackEntryAsState().value?.destination?.route
-    Scaffold(modifier = Modifier.fillMaxSize()
+    Scaffold(modifier = Modifier
+        .fillMaxSize()
         .nestedScroll(scrollBehavior.nestedScrollConnection),
              topBar = {
                  CustomAppBar(scrollBehavior = scrollBehavior,
@@ -113,7 +114,8 @@ fun CustomAppBar(
         },
         navigationIcon = {
             if (showBackButton) {
-                IconButton(onClick = { navController.popBackStack() }) {
+                IconButton(onClick = { // TODO:Handel back button
+                } ) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_back),
                         contentDescription = "Back",
@@ -167,17 +169,17 @@ fun MyBottomBar(navController1: NavController){
     val backStackEntry = navController1.currentBackStackEntryAsState()
     val list = listOf(
         BottomNavItem(
-            Icons.Rounded.Menu,
+            R.drawable.diet_ic,
             Routes.Diet.routes,
             "Diet"
         ),
         BottomNavItem(
-            Icons.Rounded.Face,
+            R.drawable.gym_ic,
             Routes.Gym.routes,
             "Gym"
         ),
         BottomNavItem(
-            Icons.Rounded.AccountBox,
+            R.drawable.yoga_ic,
             Routes.Yoga.routes,
             "Yoga"
         )
@@ -203,7 +205,9 @@ fun MyBottomBar(navController1: NavController){
                     }
                     launchSingleTop = true
                 }
-            }, icon = { Icon(imageVector = it.icon, contentDescription = it.title)})
+            }, icon = { Icon(painter = painterResource(it.icon), contentDescription = it.title, modifier = Modifier.size(25.dp))},
+                label = { Text(it.title) }
+            )
         }
     }
 }

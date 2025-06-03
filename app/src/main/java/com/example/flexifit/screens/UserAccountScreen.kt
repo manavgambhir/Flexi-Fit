@@ -99,7 +99,6 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
     val height = userDetails.height
     bmi = weight / ((height / 100).pow(2))
 
-
     LaunchedEffect(loginState) {
         if (loginState is LoginState.Idle && FirebaseAuth.getInstance().currentUser == null) {
             navController.navigate(Routes.SignIn.routes) {
@@ -136,7 +135,7 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
                 .padding(horizontal = 10.dp), contentAlignment = Alignment.CenterEnd){
                 Box(modifier = Modifier
                     .clip(RoundedCornerShape(10.dp))
-                    .border(BorderStroke(1.dp, Color.Black), RoundedCornerShape(10.dp))
+                    .border(BorderStroke(1.dp, Color.Black), RoundedCornerShape(10.dp)).background(Color.White)
                 ){
                     Text(text = "1🔥",
                         fontSize = 20.sp,
@@ -145,7 +144,6 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
                     )
                 }
             }
-
         }
 
         val user = FirebaseAuth.getInstance().currentUser
@@ -156,10 +154,8 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
             calendar.get(Calendar.YEAR)
         }
 
-
         Column(modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White)
             .verticalScroll(scrollState), horizontalAlignment = Alignment.CenterHorizontally) {
             Spacer(modifier = Modifier.size(20.dp))
 
@@ -186,11 +182,12 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
                 .fillMaxWidth()
                 .padding(15.dp))
             {
+                // Box 1 - Age Wt Ht
                 Box(modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(Color.White)
+                    .background(Color(0xFF99ddff))
                     .border(
                         BorderStroke(1.dp, Color.Black), RoundedCornerShape(16.dp)
                     )
@@ -238,12 +235,14 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
 
                 Row(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(vertical = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                    .padding(vertical = 10.dp), horizontalArrangement = Arrangement.spacedBy(10.dp))
+                {
+                    // BMI Box
                     Box(modifier = Modifier
                         .size(120.dp)
                         .weight(1f)
                         .clip(RoundedCornerShape(16.dp))
-                        .background(Color.White)
+                        .background(Color(0xFFfef9e7))
                         .border(
                             BorderStroke(1.dp, Color.Black), RoundedCornerShape(16.dp)
                         )
@@ -291,11 +290,12 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
                         }
                     }
 
+                    // Daily Calory box
                     Box(modifier = Modifier
                         .size(120.dp)
                         .weight(1f)
                         .clip(RoundedCornerShape(16.dp))
-                        .background(Color.White)
+                        .background(Color(0xFFfdedec))
                         .border(
                             BorderStroke(1.dp, Color.Black), RoundedCornerShape(16.dp)
                         )
@@ -335,80 +335,77 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
                     }
                 }
 
-                Spacer(modifier = Modifier.size(10.dp))
+            }
 
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 10.dp)
-                    .clickable {
-                        Toast
-                            .makeText(
-                                context,
-                                "History: This feature is under development",
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
-                    }
-                ){
-                    Text(text = "History", fontSize = 21.sp, modifier = Modifier.weight(1f))
-
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_back),
-                        contentDescription = "Back",
-                        modifier = Modifier.rotate(180f)
-                    )
+            // History Btn
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    Toast
+                        .makeText(
+                            context,
+                            "History: This feature is under development",
+                            Toast.LENGTH_SHORT
+                        )
+                        .show()
                 }
+                .padding(horizontal = 15.dp, vertical = 10.dp)
 
+            ){
+                Text(text = "History", fontSize = 21.sp, modifier = Modifier.weight(1f))
 
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_back),
+                    contentDescription = "Back",
+                    modifier = Modifier.rotate(180f)
+                )
+            }
 
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 10.dp)
-                    .clickable {
-                        Toast
-                            .makeText(
-                                context,
-                                "Calculate: This feature is under development",
-                                Toast.LENGTH_SHORT
-                            )
-                            .show()
-                    }
-                ){
-                    Text(text = "Calculate", fontSize = 21.sp, modifier = Modifier.weight(1f))
-
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_back),
-                        contentDescription = "Back",
-                        modifier = Modifier.rotate(180f)
-                    )
+            // Calculate Btn
+            Row(modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    Toast
+                        .makeText(
+                            context,
+                            "Calculate: This feature is under development",
+                            Toast.LENGTH_SHORT
+                        )
+                        .show()
                 }
+                .padding(horizontal = 15.dp, vertical = 10.dp)
+            ){
+                Text(text = "Calculate", fontSize = 21.sp, modifier = Modifier.weight(1f))
 
-                Spacer(modifier = Modifier.size(10.dp))
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_back),
+                    contentDescription = "Back",
+                    modifier = Modifier.rotate(180f)
+                )
+            }
 
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
-                    OutlinedButton(onClick = {
-                        authVM.signOut()
-                        sharedPref.clearUserProfile(context)
-                    }, border = BorderStroke(1.dp,Color.Red)) {
-                        if(loginState is LoginState.Loading){
-                            CircularProgressIndicator(
-                                color = Color.Red,
-                                modifier = Modifier
-                                    .size(15.dp),
-                                strokeWidth = 2.dp
-                            )
-                        }
-                        else{
-                            Text(text = "Sign Out", color = Color.Red, fontSize = 18.sp, modifier = Modifier.padding(horizontal = 25.dp))
-                        }
+            Spacer(modifier = Modifier.size(10.dp))
+
+            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+                OutlinedButton(onClick = {
+                    authVM.signOut()
+                    sharedPref.clearUserProfile(context)
+                }, border = BorderStroke(1.dp,Color.Red)) {
+                    if(loginState is LoginState.Loading){
+                        CircularProgressIndicator(
+                            color = Color.Red,
+                            modifier = Modifier
+                                .size(15.dp),
+                            strokeWidth = 2.dp
+                        )
+                    }
+                    else{
+                        Text(text = "Sign Out", color = Color.Red, fontSize = 18.sp, modifier = Modifier.padding(horizontal = 25.dp))
                     }
                 }
             }
         }
     }
-
-
-
 }
 
 @RequiresApi(Build.VERSION_CODES.O)

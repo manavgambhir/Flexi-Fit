@@ -4,11 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -19,7 +21,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PlayArrow
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,10 +42,12 @@ import androidx.navigation.NavHostController
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import com.example.flexifit.LoginState
 import com.example.flexifit.R
 import com.example.flexifit.data.models.Data
 import com.example.flexifit.data.models.ExerciseData
 import com.example.flexifit.navigation.Routes
+import com.example.flexifit.utils.sharedPref
 import com.google.gson.Gson
 
 @Composable
@@ -61,8 +67,7 @@ fun ExerciseItem(context:Context, navController: NavHostController, exercise:Dat
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
         Column(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
-
-            Box(modifier = Modifier.fillMaxWidth()
+            Box(modifier = Modifier.fillMaxSize()
                 .clip(RoundedCornerShape(6.dp))
                 .height(220.dp)
                 .background(Color.White)
@@ -72,7 +77,6 @@ fun ExerciseItem(context:Context, navController: NavHostController, exercise:Dat
 //                        context.startActivity(intent)
 //                    }
 //                }
-                ,contentAlignment = Alignment.Center
             ){
                 val painter = rememberAsyncImagePainter(
                     model = ImageRequest.Builder(context)
@@ -87,7 +91,7 @@ fun ExerciseItem(context:Context, navController: NavHostController, exercise:Dat
                     painter = painter,
                     contentDescription = "Exercise Image",
                     modifier = Modifier.fillMaxSize(),
-                    contentScale = ContentScale.FillBounds
+                    contentScale = ContentScale.Crop
                 )
 
 //                if(painter.state is AsyncImagePainter.State.Success){
@@ -123,14 +127,17 @@ fun ExerciseItem(context:Context, navController: NavHostController, exercise:Dat
                 overflow = TextOverflow.Clip
             )
 
-//            if(){
-//                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-//                    OutlinedButton(modifier = Modifier.padding(top = 10.dp), border = BorderStroke(2.dp,Color.Black),
-//                        onClick = {}){
-//                        Text(text = "Perform It", color = Color.Black, fontSize = 19.sp)
-//                    }
-//                }
-//            }
+            if(exercise.file_name.isNullOrEmpty()){
+                Spacer(modifier = Modifier.size(10.dp))
+
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+                    OutlinedButton(onClick = {
+
+                    }, border = BorderStroke(1.dp,Color.Black)) {
+                        Text(text = "Perform it", color = Color.Black, fontSize = 18.sp, modifier = Modifier.padding(horizontal = 25.dp))
+                    }
+                }
+            }
         }
 
     }
