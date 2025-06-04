@@ -3,6 +3,7 @@ package com.example.flexifit.itemView
 import android.content.Intent
 import android.net.Uri
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -39,7 +40,7 @@ fun MealItem(dishImgUrl: Any, dishName: String, dishQty:String, dishCal:Double, 
                 }
             },
         shape = RoundedCornerShape(12.dp),
-        colors = CardColors(containerColor = Color.White, contentColor = Color.Black, disabledContentColor = Color.Black, disabledContainerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = if (isSystemInDarkTheme()) Color(0xFF202020) else Color.White, contentColor = if (isSystemInDarkTheme()) Color.White else Color.Black),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         ConstraintLayout(
@@ -89,7 +90,6 @@ fun MealItem(dishImgUrl: Any, dishName: String, dishQty:String, dishCal:Double, 
             Text(
                 text = if(dishName=="Rice" || dishName=="Chapati") dishQty else "$dishQty g",
                 fontSize = 14.sp,
-                color = Color.Black,
                 modifier = Modifier.constrainAs(qty) {
                     start.linkTo(image.end, margin = 12.dp)
                     top.linkTo(name.bottom)

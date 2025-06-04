@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -178,7 +179,7 @@ fun DietScreen(navController: NavHostController){
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .padding(top = 4.dp)
-                            .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
+                            .border(1.dp, if(isSystemInDarkTheme()) Color.White else Color.Black, RoundedCornerShape(8.dp))
                             .padding(horizontal = 8.dp)
                             .height(40.dp)
                     ) {
@@ -190,7 +191,7 @@ fun DietScreen(navController: NavHostController){
                                 painter = painterResource(id = R.drawable.remove),
                                 contentDescription = "Decrease Quantity",
                                 modifier = Modifier.size(22.dp),
-                                colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.Black)
+                                colorFilter = ColorFilter.tint(if (isSystemInDarkTheme()) Color.White else Color.Black)
                             )
                         }
 
@@ -208,7 +209,7 @@ fun DietScreen(navController: NavHostController){
                                 painter = painterResource(id = R.drawable.add),
                                 contentDescription = "Increase Quantity",
                                 modifier = Modifier.size(22.dp),
-                                colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.Black)
+                                colorFilter = ColorFilter.tint(if (isSystemInDarkTheme()) Color.White else Color.Black)
                             )
                         }
                     }
@@ -218,7 +219,8 @@ fun DietScreen(navController: NavHostController){
 
                 Checkbox(
                     checked = bfastRice,
-                    onCheckedChange = { bfastRice = !bfastRice }
+                    onCheckedChange = { bfastRice = !bfastRice },
+                    colors = CheckboxDefaults.colors(checkedColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
                 )
 
             }
@@ -255,7 +257,7 @@ fun DietScreen(navController: NavHostController){
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .padding(top = 4.dp)
-                            .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
+                            .border(1.dp, if(isSystemInDarkTheme()) Color.White else Color.Black, RoundedCornerShape(8.dp))
                             .padding(horizontal = 8.dp)
                             .height(40.dp)
                     ) {
@@ -267,7 +269,7 @@ fun DietScreen(navController: NavHostController){
                                 painter = painterResource(id = R.drawable.remove),
                                 contentDescription = "Decrease Quantity",
                                 modifier = Modifier.size(22.dp),
-                                colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.Black)
+                                colorFilter = ColorFilter.tint(if (isSystemInDarkTheme()) Color.White else Color.Black)
                             )
                         }
 
@@ -285,7 +287,7 @@ fun DietScreen(navController: NavHostController){
                                 painter = painterResource(id = R.drawable.add),
                                 contentDescription = "Increase Quantity",
                                 modifier = Modifier.size(22.dp),
-                                colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.Black)
+                                colorFilter = ColorFilter.tint(if (isSystemInDarkTheme()) Color.White else Color.Black)
                             )
                         }
                     }
@@ -295,7 +297,8 @@ fun DietScreen(navController: NavHostController){
 
                 Checkbox(
                     checked = lunchRice,
-                    onCheckedChange = { lunchRice = !lunchRice }
+                    onCheckedChange = { lunchRice = !lunchRice },
+                    colors = CheckboxDefaults.colors(checkedColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
                 )
 
             }
@@ -332,7 +335,7 @@ fun DietScreen(navController: NavHostController){
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .padding(top = 4.dp)
-                            .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
+                            .border(1.dp, if(isSystemInDarkTheme()) Color.White else Color.Black, RoundedCornerShape(8.dp))
                             .padding(horizontal = 8.dp)
                             .height(40.dp)
                     ) {
@@ -344,7 +347,7 @@ fun DietScreen(navController: NavHostController){
                                 painter = painterResource(id = R.drawable.remove),
                                 contentDescription = "Decrease Quantity",
                                 modifier = Modifier.size(22.dp),
-                                colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.Black)
+                                colorFilter = ColorFilter.tint(if (isSystemInDarkTheme()) Color.White else Color.Black)
                             )
                         }
 
@@ -362,7 +365,7 @@ fun DietScreen(navController: NavHostController){
                                 painter = painterResource(id = R.drawable.add),
                                 contentDescription = "Increase Quantity",
                                 modifier = Modifier.size(22.dp),
-                                colorFilter = androidx.compose.ui.graphics.ColorFilter.tint(Color.Black)
+                                colorFilter = ColorFilter.tint(if (isSystemInDarkTheme()) Color.White else Color.Black)
                             )
                         }
                     }
@@ -372,7 +375,8 @@ fun DietScreen(navController: NavHostController){
 
                 Checkbox(
                     checked = dinnerRice,
-                    onCheckedChange = { dinnerRice = !dinnerRice }
+                    onCheckedChange = { dinnerRice = !dinnerRice },
+                    colors = CheckboxDefaults.colors(checkedColor = if (isSystemInDarkTheme()) Color.White else Color.Black)
                 )
 
             }
@@ -425,7 +429,7 @@ fun DietScreen(navController: NavHostController){
                     .fillMaxWidth()
                     .padding(25.dp)
             ) {
-                Text(text = "Submit", fontSize = 16.sp)
+                Text(text = "Submit", fontSize = 16.sp, color = Color.White)
             }
         }
     }

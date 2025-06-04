@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -66,7 +68,7 @@ fun ExerciseItem(context:Context, navController: NavHostController, exercise:Dat
         },
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
-        Column(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
+        Column(modifier = Modifier.fillMaxWidth().background(Color(0xFFe6faff)).padding(12.dp)) {
             Box(modifier = Modifier.fillMaxSize()
                 .clip(RoundedCornerShape(6.dp))
                 .height(220.dp)
@@ -127,17 +129,17 @@ fun ExerciseItem(context:Context, navController: NavHostController, exercise:Dat
                 overflow = TextOverflow.Clip
             )
 
-//            if(!exercise.file_name.isNullOrEmpty()){
-//                Spacer(modifier = Modifier.size(10.dp))
-//
-//                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
-//                    OutlinedButton(onClick = {
-//                        navController.navigate(Routes.Camera.routes)
-//                    }, border = BorderStroke(1.dp,Color.Black)) {
-//                        Text(text = "Perform it", color = Color.Black, fontSize = 18.sp, modifier = Modifier.padding(horizontal = 25.dp))
-//                    }
-//                }
-//            }
+            if(!exercise.file_name.isNullOrEmpty()){
+                Spacer(modifier = Modifier.size(10.dp))
+
+                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+                    OutlinedButton(onClick = {
+                        navController.navigate(Routes.Camera.routes)
+                    }, border = BorderStroke(1.dp,Color.Black), colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF80e5ff))) {
+                        Text(text = "Perform it", color = Color.Black, fontSize = 18.sp, modifier = Modifier.padding(horizontal = 25.dp))
+                    }
+                }
+            }
         }
 
     }

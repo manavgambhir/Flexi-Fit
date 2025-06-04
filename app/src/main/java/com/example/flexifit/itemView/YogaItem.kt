@@ -48,7 +48,7 @@ fun YogaItem(context: Context, navController: NavHostController, yogaPose: Pose)
         },
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
-        Row (modifier = Modifier.fillMaxSize().padding(12.dp)) {
+        Row (modifier = Modifier.fillMaxSize().background(Color(0xFFfff2e6)).padding(12.dp)) {
             Box(
                 modifier = Modifier.fillMaxHeight()
                     .width(170.dp)

@@ -232,28 +232,30 @@ fun MealCard(
     isChecked: Boolean,
     onCheckChanged: (Boolean) -> Unit
 ) {
-    Card(modifier = Modifier.fillMaxWidth(), border = BorderStroke(2.dp, Color.Black), elevation = CardDefaults.cardElevation(2.dp)) {
+    Card(modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(containerColor = Color(0xFFffa64d)), border = BorderStroke(2.dp, Color.Black), elevation = CardDefaults.cardElevation(2.dp)) {
         Column(modifier = Modifier.padding(20.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
                 Checkbox(
                     modifier = Modifier.size(22.dp),
                     checked = isChecked,
-                    onCheckedChange = { onCheckChanged(!isChecked) }
+                    onCheckedChange = { onCheckChanged(!isChecked) },
+                    colors = CheckboxDefaults.colors(uncheckedColor = Color.Black, checkedColor = Color.Black, checkmarkColor = Color.White)
                 )
 
                 Spacer(modifier = Modifier.size(12.dp))
 
-                Text(text = title, fontSize = 21.sp, fontWeight = FontWeight.Bold)
+                Text(text = title, fontSize = 21.sp, fontWeight = FontWeight.ExtraBold, color = Color.Black)
 
                 val totalCal = netCalories + (if(isRice) 136.0 else 0.0) + (chapatiCount * 104.0)
-                Text(text = "$totalCal cal", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.End, color = Color.Black)
+                Text(text = "$totalCal cal", modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.End, color = Color.Black, fontWeight = FontWeight.SemiBold)
             }
 
             Spacer(modifier = Modifier.size(10.dp))
 
             Text(
                 text = description,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                color = Color.Black
             )
 
             Spacer(modifier = Modifier.size(8.dp))

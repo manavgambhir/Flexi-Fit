@@ -146,6 +146,7 @@ fun CommonExerciseScreen(
                 Icon(
                     imageVector = Icons.Default.Close,
                     contentDescription = "Close",
+                    tint = Color.Black,
                     modifier = Modifier
                         .clip(RoundedCornerShape(40.dp))
                         .border(1.dp, Color.Black, RoundedCornerShape(40.dp))

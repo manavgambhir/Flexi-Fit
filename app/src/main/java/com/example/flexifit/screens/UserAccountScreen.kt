@@ -117,7 +117,7 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_back),
-                    contentDescription = "Back",
+                    contentDescription = "Back"
                 )
             }
             Box(modifier = Modifier
@@ -140,6 +140,7 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
                     Text(text = "1🔥",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.SemiBold,
+                        color = Color.Black,
                         modifier = Modifier.padding(7.dp)
                     )
                 }
@@ -201,8 +202,8 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
                                 modifier = Modifier.size(30.dp)
                             )
 
-                            Text(text = "Age", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
-                            Text(text = "$age Years", fontSize = 16.sp)
+                            Text(text = "Age", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
+                            Text(text = "$age Years", fontSize = 16.sp, color = Color.Black)
                         }
 
                         // Weight
@@ -213,9 +214,9 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
                                 modifier = Modifier.size(30.dp)
                             )
 
-                            Text(text = "Weight", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                            Text(text = "Weight", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
 
-                            Text(text = "${weight.toInt()} Kg", fontSize = 16.sp)
+                            Text(text = "${weight.toInt()} Kg", fontSize = 16.sp, color = Color.Black)
                         }
 
                         // Height
@@ -226,9 +227,9 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
                                 modifier = Modifier.size(30.dp)
                             )
 
-                            Text(text = "Height", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                            Text(text = "Height", fontSize = 18.sp, fontWeight = FontWeight.SemiBold, color = Color.Black)
 
-                            Text(text = "${height.toInt()} cm", fontSize = 16.sp)
+                            Text(text = "${height.toInt()} cm", fontSize = 16.sp, color = Color.Black)
                         }
                     }
                 }
@@ -258,9 +259,9 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
                         Column(modifier = Modifier.fillMaxWidth()) {
                             Spacer(modifier = Modifier.size(10.dp))
 
-                            Text(text = "BMI", modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(15.dp), textAlign = TextAlign.Center, fontSize = 22.sp, fontWeight = FontWeight.Medium)
+                            Text(text = "BMI", modifier = Modifier.fillMaxWidth().padding(15.dp),
+                                textAlign = TextAlign.Center, fontSize = 22.sp, fontWeight = FontWeight.Medium, color = Color.Black
+                            )
 
                             // BMI
                             Box(
@@ -327,6 +328,7 @@ fun UserAccountScreen(navController: NavHostController, userDetails: UserProfile
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(10.dp),
+                            color = Color.Black,
                             overflow = TextOverflow.Clip ,
                             textAlign = TextAlign.Center,
                             fontSize = 14.sp,
