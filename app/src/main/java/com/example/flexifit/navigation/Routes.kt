@@ -8,6 +8,8 @@ sealed class Routes(val routes:String) {
     object Yoga:Routes("yoga")
     object ExerciseDetailYoga:Routes("exercise_detail_yoga/{yogaPose}")
 
+    object Camera:Routes("camera")
+
 
     object Diet:Routes("diet")
     object MealPlan:Routes("meal_plan/{mealData}")

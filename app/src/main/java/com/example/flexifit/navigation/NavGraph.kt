@@ -14,6 +14,7 @@ import com.example.flexifit.data.models.MealPlanData
 import com.example.flexifit.data.models.Pose
 import com.example.flexifit.data.models.UserProfile
 import com.example.flexifit.screens.BottomNav
+import com.example.flexifit.screens.CameraScreen
 import com.example.flexifit.screens.DietScreen
 import com.example.flexifit.screens.ExerciseDetailScreen
 import com.example.flexifit.screens.GymPlanScreen
@@ -117,6 +118,10 @@ fun NavGraph(navHostController: NavHostController) {
             val decodeJson = Uri.decode(json)
             val userDetails = Gson().fromJson(decodeJson,UserProfile::class.java)
             UserAccountScreen(navHostController,userDetails)
+        }
+
+        composable(Routes.Camera.routes){
+            CameraScreen(navHostController)
         }
 
 

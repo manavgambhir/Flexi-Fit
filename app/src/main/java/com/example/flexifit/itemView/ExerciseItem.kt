@@ -127,17 +127,17 @@ fun ExerciseItem(context:Context, navController: NavHostController, exercise:Dat
                 overflow = TextOverflow.Clip
             )
 
-            if(exercise.file_name.isNullOrEmpty()){
-                Spacer(modifier = Modifier.size(10.dp))
-
-                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
-                    OutlinedButton(onClick = {
-
-                    }, border = BorderStroke(1.dp,Color.Black)) {
-                        Text(text = "Perform it", color = Color.Black, fontSize = 18.sp, modifier = Modifier.padding(horizontal = 25.dp))
-                    }
-                }
-            }
+//            if(!exercise.file_name.isNullOrEmpty()){
+//                Spacer(modifier = Modifier.size(10.dp))
+//
+//                Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
+//                    OutlinedButton(onClick = {
+//                        navController.navigate(Routes.Camera.routes)
+//                    }, border = BorderStroke(1.dp,Color.Black)) {
+//                        Text(text = "Perform it", color = Color.Black, fontSize = 18.sp, modifier = Modifier.padding(horizontal = 25.dp))
+//                    }
+//                }
+//            }
         }
 
     }

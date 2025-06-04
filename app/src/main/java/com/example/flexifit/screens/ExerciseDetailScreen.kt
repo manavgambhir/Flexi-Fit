@@ -55,6 +55,7 @@ import com.example.flexifit.R
 import com.example.flexifit.data.models.Data
 import com.example.flexifit.data.models.ExerciseData
 import com.example.flexifit.data.models.Pose
+import com.example.flexifit.navigation.Routes
 
 // Polymorphism - Overloading
 @Composable
@@ -66,7 +67,7 @@ fun ExerciseDetailScreen(navController: NavHostController, yoga: Pose){
         imageUrl = yoga.image_url,
         description = yoga.yoga_description,
         steps = yoga.yoga_instruction,
-        tfFile = if(yoga.file_name.isNotEmpty()) yoga.file_name else null,
+        tfFile = yoga.file_name.ifBlank { null },
         isYoga = true
     )
 }
@@ -77,6 +78,7 @@ fun ExerciseDetailScreen(navController: NavHostController, exerciseData: Exercis
     val exUrl = exerciseData.thumbnailUrl
     val exerciseSteps = data.text_tutorials.map { it.text }
 
+    data.file_name?.let { Log.d("TFTest", it) }
     CommonExerciseScreen(
         navController = navController,
         title = data.title,
@@ -84,7 +86,7 @@ fun ExerciseDetailScreen(navController: NavHostController, exerciseData: Exercis
         imageUrl = exUrl,
         videoUrl = data.video_tutorials[0],
         steps = exerciseSteps,
-        tfFile = if(!data.file_name.isNullOrEmpty()) data.file_name else null,
+        tfFile = data.file_name?.takeIf { it.isNotBlank() },
         isYoga = false
     )
 }
@@ -227,12 +229,12 @@ fun CommonExerciseScreen(
                 }
             }
 
-            if(tfFile!=null){
+            if(!tfFile.isNullOrEmpty()){
                 Spacer(modifier = Modifier.size(25.dp))
 
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
                     Button(onClick = {
-
+                        navController.navigate(Routes.Camera.routes)
                     }, colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
                     ){
                         Text(text = "Perform " + if(isYoga) "Asana" else "Exercise",
