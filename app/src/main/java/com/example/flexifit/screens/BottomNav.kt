@@ -9,6 +9,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -103,43 +104,63 @@ fun CustomAppBar(
     // Show back button if not on home screen
     val showBackButton = currentRoute != Routes.Diet.routes
 
-    LargeTopAppBar(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
-        title = {
-            Text(
-                text = title,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
-            )
-        },
-        navigationIcon = {
-            if (showBackButton) {
-                IconButton(onClick = { // TODO:Handel back button
-                } ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_back),
-                        contentDescription = "Back",
-                    )
-                }
-            }
-        },
-        actions = {
-            IconButton(onClick = {
-                val user = sharedPref.getUserProfile(context)
-                val json = Gson().toJson(user)
-                val encodedJson = Uri.encode(json)
-                val route = Routes.UserAccount.routes.replace("{userData}",encodedJson)
-                navController.navigate(route)
-            }) {
+    val navigationIcon: @Composable (() -> Unit) = {
+        if (showBackButton) {
+            IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
-                    imageVector = Icons.Default.AccountCircle,
-                    contentDescription = "Profile",
-                    modifier = Modifier.size(33.dp)
+                    painter = painterResource(id = R.drawable.ic_back),
+                    contentDescription = "Back",
                 )
             }
-        },
-        scrollBehavior = scrollBehavior
-    )
+        }
+    }
+
+    val actions: @Composable RowScope.() -> Unit = {
+        IconButton(onClick = {
+            val user = sharedPref.getUserProfile(context)
+            val json = Gson().toJson(user)
+            val encodedJson = Uri.encode(json)
+            val route = Routes.UserAccount.routes.replace("{userData}", encodedJson)
+            navController.navigate(route)
+        }) {
+            Icon(
+                imageVector = Icons.Default.AccountCircle,
+                contentDescription = "Profile",
+                modifier = Modifier.size(33.dp)
+            )
+        }
+    }
+
+//    if(currentRoute==Routes.Gym.routes){
+//        TopAppBar(
+//            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+//            title = {
+//                Text(
+//                    text = title,
+//                    fontSize = 20.sp,
+//                    fontWeight = FontWeight.Medium
+//                )
+//            },
+//            navigationIcon = navigationIcon,
+//            actions = actions,
+//            scrollBehavior = scrollBehavior
+//        )
+//    }
+//    else{
+        LargeTopAppBar(
+            modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+            title = {
+                Text(
+                    text = title,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            },
+            navigationIcon = navigationIcon,
+            actions = actions,
+            scrollBehavior = scrollBehavior
+        )
+//    }
 }
 
 // TODO: TEST OUT THE TOP APP BAR WITH LOGO
