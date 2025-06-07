@@ -8,6 +8,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -66,9 +67,10 @@ fun ExerciseItem(context:Context, navController: NavHostController, exercise:Dat
             val route = Routes.ExerciseDetailGym.routes.replace("{exData}",encodeJson)
             navController.navigate(route)
         },
-        elevation = CardDefaults.cardElevation(6.dp)
+        elevation = CardDefaults.cardElevation(3.dp),
+        colors = CardDefaults.cardColors(containerColor = if(isSystemInDarkTheme()) Color.Black else Color(0xFFe6faff))
     ) {
-        Column(modifier = Modifier.fillMaxWidth().background(Color(0xFFe6faff)).padding(12.dp)) {
+        Column(modifier = Modifier.fillMaxWidth().padding(12.dp)) {
             Box(modifier = Modifier.fillMaxSize()
                 .clip(RoundedCornerShape(6.dp))
                 .height(220.dp)
@@ -107,7 +109,7 @@ fun ExerciseItem(context:Context, navController: NavHostController, exercise:Dat
             }
 
             Text(text = exercise.title,
-                color = Color.Black,
+//                color = Color.Black,
                 fontFamily = FontFamily.Default,
                 fontSize = 21.sp,
                 fontWeight = FontWeight.Bold,
@@ -119,7 +121,7 @@ fun ExerciseItem(context:Context, navController: NavHostController, exercise:Dat
             )
 
             Text(text = exercise.difficulty,
-                color = Color.DarkGray,
+                color = if(isSystemInDarkTheme()) Color.LightGray else Color.DarkGray,
                 fontFamily = FontFamily.Default,
                 fontSize = 16.sp,
                 modifier = Modifier

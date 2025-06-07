@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,20 +40,21 @@ import com.google.gson.Gson
 
 @Composable
 fun YogaItem(context: Context, navController: NavHostController, yogaPose: Pose) {
-    Card(modifier = Modifier.fillMaxWidth().height(250.dp).padding(10.dp)
+    Card(shape = RoundedCornerShape(6.dp), modifier = Modifier.fillMaxWidth().height(250.dp).padding(10.dp)
         .clickable {
             val json = Gson().toJson(yogaPose)
             val encodeJson = Uri.encode(json)
             val route = Routes.ExerciseDetailYoga.routes.replace("{yogaPose}",encodeJson)
             navController.navigate(route)
         },
-        elevation = CardDefaults.cardElevation(6.dp)
+        elevation = CardDefaults.cardElevation(3.dp),
+        colors = CardDefaults.cardColors(containerColor = if(isSystemInDarkTheme()) Color.Black else Color(0xFFfff2e6),
+            contentColor = if(isSystemInDarkTheme()) Color.White else Color.Black)
     ) {
-        Row (modifier = Modifier.fillMaxSize().background(Color(0xFFfff2e6)).padding(12.dp)) {
+        Row (modifier = Modifier.fillMaxSize().padding(12.dp)) {
             Box(
                 modifier = Modifier.fillMaxHeight()
                     .width(170.dp)
-                    .clip(RoundedCornerShape(6.dp))
                     .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
@@ -72,7 +74,7 @@ fun YogaItem(context: Context, navController: NavHostController, yogaPose: Pose)
             Column(modifier = Modifier.fillMaxHeight().padding(14.dp)) {
                 Text(
                     text = "${yogaPose.english_name} Pose",
-                    color = Color.Black,
+//                    color = Color.Black,
                     fontFamily = FontFamily.Default,
                     fontSize = 21.sp,
                     fontWeight = FontWeight.Bold,
@@ -85,7 +87,7 @@ fun YogaItem(context: Context, navController: NavHostController, yogaPose: Pose)
 
                 Text(
                     text = "Sanskrit: ${yogaPose.sanskrit_name}",
-                    color = Color.DarkGray,
+                    color = if(isSystemInDarkTheme()) Color.LightGray else Color.DarkGray,
                     fontFamily = FontFamily.Default,
                     fontSize = 16.sp,
                     modifier = Modifier

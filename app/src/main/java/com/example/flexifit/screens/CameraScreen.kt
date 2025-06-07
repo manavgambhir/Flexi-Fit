@@ -89,6 +89,8 @@ fun CameraScreen(navController: NavHostController) {
         }
 
         Column(modifier = Modifier.fillMaxWidth().padding(25.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+            Spacer(modifier = Modifier.size(50.dp))
+
             Text(text = "Squats", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 22.sp)
 
             Spacer(modifier = Modifier.size(10.dp))
