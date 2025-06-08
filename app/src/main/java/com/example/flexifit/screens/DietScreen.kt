@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.flexifit.constants.diet.DietConstants
 import com.example.flexifit.data.models.DietType
 import com.example.flexifit.R
 import com.example.flexifit.data.models.MealPlanData
@@ -67,12 +68,7 @@ fun DietScreen(navController: NavHostController){
         DietTypeList(onItemClick = { clickedType->
             // For API Call, converted to lower case with dash
             val clickTypeFormatted = clickedType.lowercase().replace(" ", "-")
-            type = clickTypeFormatted
-
-            when (type) {
-                "no-sugar" -> type="sugar-conscious"
-            }
-
+            type = DietConstants.formattedClickTypeToActualType[clickTypeFormatted] ?: clickTypeFormatted
             showBottomSheet = true
         })
     }
