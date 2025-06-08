@@ -136,7 +136,8 @@ fun ExerciseItem(context:Context, navController: NavHostController, exercise:Dat
 
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
                     OutlinedButton(onClick = {
-                        navController.navigate(Routes.Camera.routes)
+                        val route = Routes.Camera.routes.replace("{exerciseData}",exercise.title)
+                        navController.navigate(route)
                     }, border = BorderStroke(1.dp,Color.Black), colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF80e5ff))) {
                         Text(text = "Perform it", color = Color.Black, fontSize = 18.sp, modifier = Modifier.padding(horizontal = 25.dp))
                     }

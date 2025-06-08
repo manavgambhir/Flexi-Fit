@@ -109,7 +109,6 @@ fun NavGraph(navHostController: NavHostController) {
             val json = it.arguments?.getString("yogaPose")
             val decodeJson = Uri.decode(json)
             val yoga = Gson().fromJson(decodeJson,Pose::class.java)
-            Log.d("ProfileTest",yoga.toString())
             ExerciseDetailScreen(navHostController,yoga)
         }
 
@@ -121,7 +120,8 @@ fun NavGraph(navHostController: NavHostController) {
         }
 
         composable(Routes.Camera.routes){
-            CameraScreen(navHostController)
+            val exerciseData = it.arguments?.getString("exerciseData")
+            CameraScreen(navHostController,exerciseData)
         }
 
 

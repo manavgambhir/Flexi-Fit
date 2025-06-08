@@ -7,6 +7,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -149,7 +150,7 @@ fun CommonExerciseScreen(
                     tint = Color.Black,
                     modifier = Modifier
                         .clip(RoundedCornerShape(40.dp))
-                        .border(1.dp, Color.Black, RoundedCornerShape(40.dp))
+//                        .border(1.dp, Color.Black, RoundedCornerShape(40.dp))
                         .background(Color.White.copy(alpha = 0.7f))
                         .padding(6.dp)
                         .size(30.dp),
@@ -224,7 +225,14 @@ fun CommonExerciseScreen(
                         text = "●",
                         fontSize = 18.sp,
                         fontWeight = if (index == pagerState.currentPage) FontWeight.Bold else FontWeight.Normal,
-                        color = if (index == pagerState.currentPage) Color.Black else Color.Gray,
+                        color = if (index == pagerState.currentPage) {
+                            if(isSystemInDarkTheme()){
+                                Color.White
+                            } else{
+                                Color.Black
+                            }
+                        } else {
+                            Color.Gray },
                         modifier = Modifier.padding(horizontal = 2.dp)
                     )
                 }
@@ -235,7 +243,8 @@ fun CommonExerciseScreen(
 
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
                     Button(onClick = {
-                        navController.navigate(Routes.Camera.routes)
+                        val route = Routes.Camera.routes.replace("{exerciseData}",title)
+                        navController.navigate(route)
                     }, colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
                     ){
                         Text(text = "Perform " + if(isYoga) "Asana" else "Exercise",

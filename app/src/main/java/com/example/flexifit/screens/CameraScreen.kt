@@ -34,12 +34,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.example.flexifit.navigation.Routes
 import kotlinx.coroutines.delay
 import java.util.Locale
 
 @Composable
-fun CameraScreen(navController: NavHostController) {
+fun CameraScreen(navController: NavHostController, exerciseData: String?) {
     var text by remember { mutableStateOf("") }
     var isVisible by remember { mutableStateOf(false) }
     var trigger by remember { mutableStateOf(false) }
@@ -91,7 +90,7 @@ fun CameraScreen(navController: NavHostController) {
         Column(modifier = Modifier.fillMaxWidth().padding(25.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
             Spacer(modifier = Modifier.size(50.dp))
 
-            Text(text = "Squats", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 22.sp)
+            Text(text = exerciseData ?: "Exercise", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 22.sp)
 
             Spacer(modifier = Modifier.size(10.dp))
 
@@ -143,5 +142,5 @@ fun CameraScreen(navController: NavHostController) {
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun CameraScreenPreview(){
-    CameraScreen(rememberNavController())
+    CameraScreen(rememberNavController(), "")
 }
