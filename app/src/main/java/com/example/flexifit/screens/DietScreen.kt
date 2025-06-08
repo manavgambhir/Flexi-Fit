@@ -68,6 +68,11 @@ fun DietScreen(navController: NavHostController){
             // For API Call, converted to lower case with dash
             val clickTypeFormatted = clickedType.lowercase().replace(" ", "-")
             type = clickTypeFormatted
+
+            when (type) {
+                "no-sugar" -> type="sugar-conscious"
+            }
+
             showBottomSheet = true
         })
     }
