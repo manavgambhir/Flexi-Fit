@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.example.flexifit.R
 import com.example.flexifit.navigation.Routes
 import kotlinx.coroutines.launch

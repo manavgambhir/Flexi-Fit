@@ -28,7 +28,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.flexifit.navigation.Routes
 import com.example.flexifit.utils.sharedPref
 import com.example.flexifit.viewmodels.OnboardingViewModel

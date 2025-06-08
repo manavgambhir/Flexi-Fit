@@ -1,6 +1,5 @@
 package com.example.flexifit.screens.onboarding
 
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -50,7 +49,6 @@ import com.example.flexifit.viewmodels.OnboardingViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
-import kotlinx.coroutines.delay
 
 @Composable
 fun SignInScreen(navController: NavHostController, onboardingViewModel: OnboardingViewModel){
