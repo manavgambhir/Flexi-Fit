@@ -243,7 +243,11 @@ fun CommonExerciseScreen(
 
                 Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center){
                     Button(onClick = {
-                        val route = Routes.Camera.routes.replace("{exerciseData}",title)
+                        var data = title
+                        if(isYoga){
+                            data = "$title Pose"
+                        }
+                        val route = Routes.Camera.routes.replace("{exerciseData}",data)
                         navController.navigate(route)
                     }, colors = ButtonDefaults.buttonColors(containerColor = Color.Black)
                     ){
