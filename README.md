@@ -98,15 +98,12 @@ Add your SHA-1 key in **Project Settings > Your Apps > Add Fingerprint**:
    - For debug key:  
      `./gradlew signingReport` → use SHA-1 from `debug` variant
    - For release key (for production):  
-     Use the SHA-1 from your release keystore
-     
+     Use the SHA-1 from your release keystore     
 <br>
 
 Enable Firestore Database
 - Navigate to **Firestore Database** in Firebase Console.
 - Click **Create Database**, choose "Start in test mode" (for development), or set rules as needed.
-- Create a collection named: `users`
-
 
 ## Running the App
 Use Android Studio to open the project, or you can run the app using the command:
