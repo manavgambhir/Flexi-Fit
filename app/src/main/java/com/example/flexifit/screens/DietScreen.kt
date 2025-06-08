@@ -2,7 +2,6 @@ package com.example.flexifit.screens
 
 import android.net.Uri
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
@@ -56,7 +55,7 @@ fun DietScreen(navController: NavHostController){
     var dinnerIngredient by remember { mutableStateOf("") }
     var dinnerChapati by remember { mutableIntStateOf(0) }
     var dinnerRice by remember { mutableStateOf(false) }
-    var type by remember { mutableStateOf("") }
+    var dietPlanType by remember { mutableStateOf("") }
     var showBottomSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     var bmi by remember { mutableDoubleStateOf(0.0) }
@@ -68,7 +67,7 @@ fun DietScreen(navController: NavHostController){
         DietTypeList(onItemClick = { clickedType->
             // For API Call, converted to lower case with dash
             val clickTypeFormatted = clickedType.lowercase().replace(" ", "-")
-            type = DietConstants.formattedClickTypeToActualType[clickTypeFormatted] ?: clickTypeFormatted
+            dietPlanType = DietConstants.formattedClickTypeToActualType[clickTypeFormatted] ?: clickTypeFormatted
             showBottomSheet = true
         })
     }
@@ -412,7 +411,7 @@ fun DietScreen(navController: NavHostController){
                         }
 
                         val data = MealPlanData(
-                            type,calories,bfastIngredient,bfastChapati, bfastRice, lunchIngredient, lunchChapati, lunchRice, dinnerIngredient, dinnerChapati, dinnerRice
+                            dietPlanType,calories,bfastIngredient,bfastChapati, bfastRice, lunchIngredient, lunchChapati, lunchRice, dinnerIngredient, dinnerChapati, dinnerRice
                         )
                         val json = Gson().toJson(data)
                         val encodeJson = Uri.encode(json)
