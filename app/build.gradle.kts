@@ -90,4 +90,6 @@ dependencies {
     implementation (libs.tensorflow.lite)
     implementation (libs.tensorflow.lite.gpu)
     implementation (libs.tensorflow.lite.support)
+
+    implementation("androidx.compose.ui:ui-text-google-fonts:1.8.1")
 }
