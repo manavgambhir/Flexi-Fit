@@ -1,5 +1,12 @@
 package com.example.flexifit.screens
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.view.SurfaceView
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -23,28 +30,71 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import org.tensorflow.lite.examples.poseestimation.camera.CameraSource
+import org.tensorflow.lite.examples.poseestimation.data.Device
+import org.tensorflow.lite.examples.poseestimation.ml.ModelType
+import org.tensorflow.lite.examples.poseestimation.ml.MoveNet
+import org.tensorflow.lite.examples.poseestimation.ml.PoseClassifier
+import org.tensorflow.lite.examples.poseestimation.ml.PoseDetector
 import java.util.Locale
 
 @Composable
 fun CameraScreen(navController: NavHostController, exerciseData: String?) {
+    val context = LocalContext.current
     var text by remember { mutableStateOf("") }
     var isVisible by remember { mutableStateOf(false) }
     var trigger by remember { mutableStateOf(false) }
 
     var timerText by remember { mutableStateOf("00:00:00") }
     var isTimerRunning by remember { mutableStateOf(false) }
+    var bdrColor by remember { mutableStateOf(Color.Red) }
+
+    var cameraSource by remember { mutableStateOf<CameraSource?>(null) }
+    var poseDetector by remember { mutableStateOf<PoseDetector?>(null) }
+    var correct_label by remember { mutableStateOf("") }
+
+    var hasCameraPermission by remember {
+        mutableStateOf(ContextCompat.checkSelfPermission(
+            context, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)
+    }
+
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted->
+            hasCameraPermission = isGranted
+            if(isGranted){
+                openCamera(context)
+            }
+            else{
+                Toast.makeText(context, "Camera permission denied", Toast.LENGTH_SHORT).show()
+            }
+        }
+    )
+
+    LaunchedEffect(Unit) {
+        if (!hasCameraPermission) {
+            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+        }
+    }
 
     LaunchedEffect(trigger) {
         if (trigger) {
@@ -71,11 +121,21 @@ fun CameraScreen(navController: NavHostController, exerciseData: String?) {
                 timerText = String.format(Locale.ENGLISH,"%02d:%02d:%02d", hours, minutes, secs)
                 delay(1000L)
                 seconds++
+//                brdChange = !brdChange
             }
         }
     }
-
-    Box(modifier = Modifier.fillMaxSize().background(Color.Black).border(BorderStroke(7.dp, Color.Green))){
+//
+//    LaunchedEffect(brdChange) {
+//        bdrColor = Color.Red
+//        delay(2000)
+//        bdrColor = Color.Green
+//        delay(100)
+//        bdrColor = Color.Red
+//        delay(2000)
+//        bdrColor = Color.Green
+//    }
+    Box(modifier = Modifier.fillMaxSize().border(BorderStroke(7.dp, bdrColor))){
         if (isVisible) {
             Box(
                 modifier = Modifier
@@ -136,7 +196,73 @@ fun CameraScreen(navController: NavHostController, exerciseData: String?) {
 
             Spacer(modifier = Modifier.size(15.dp))
         }
+
+//        AndroidView(
+//            factory = { context ->
+//                SurfaceView(context).apply {
+//                    // Initialize camera source when SurfaceView is created
+//                    initializeCamera(this, correct_label) { source, detector ->
+//                        cameraSource = source
+//                        poseDetector = detector
+//                    }
+//                }
+//            },
+//            modifier = Modifier.fillMaxSize()
+//        )
+
     }
+}
+
+private fun initializeCamera(
+    surfaceView: SurfaceView,
+    correctLabel:String,
+    onInitialized: (CameraSource, PoseDetector) -> Unit
+) {
+    val context = surfaceView.context
+
+    // Create pose detector (similar to original createPoseEstimator)
+    val poseDetector = MoveNet.create(context, Device.CPU, ModelType.Thunder)
+
+    // Create camera source with pose detection callbacks
+    val cameraSource = CameraSource(surfaceView, object : CameraSource.CameraSourceListener {
+        override fun onFPSListener(fps: Int) {
+            // Handle FPS updates
+        }
+
+        override fun onDetectedInfo(
+            personScore: Float?,
+            poseLabels: List<Pair<String, Float>>?
+        ) {
+            // Handle pose detection results
+            poseLabels?.sortedByDescending { it.second }?.let { labels ->
+                for (label in labels) {
+                    if (correctLabel == label.first) {
+                        if (label.second >= 0.85) {
+                            // Correct pose detected - update UI to green
+                            // You'll need to pass this state back to your Compose UI
+                        } else {
+                            // Incorrect pose - update UI to red
+                        }
+                    }
+                }
+            }
+        }
+    }).apply {
+        prepareCamera()
+        setDetector(poseDetector)
+        setClassifier(PoseClassifier.create(context))
+    }
+
+    // Initialize camera
+    CoroutineScope(Dispatchers.Main).launch {
+        cameraSource.initCamera()
+    }
+
+    onInitialized(cameraSource, poseDetector)
+}
+
+fun openCamera(context: Context) {
+    Toast.makeText(context, "Camera open ho ja sim sim", Toast.LENGTH_SHORT).show()
 }
 
 @Preview(showBackground = true, showSystemUi = true)

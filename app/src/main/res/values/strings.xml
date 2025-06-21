@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">FlexiFit</string>
-    <string name="web_client_id">992794053366-4peg04jtfbimta3ocslucqbm9hd8qe77.apps.googleusercontent.com</string>
+    <string name="web_client_id">779016102043-0pan4ki8aegrjnj8sebetr3g9ebnbc0u.apps.googleusercontent.com</string>
     <array name="com_google_android_gms_fonts_certs">
         <item>@array/com_google_android_gms_fonts_certs_dev</item>
         <item>@array/com_google_android_gms_fonts_certs_prod</item>
