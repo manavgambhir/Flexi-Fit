@@ -26,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -49,6 +51,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.tensorflow.lite.examples.poseestimation.camera.CameraSource
 import org.tensorflow.lite.examples.poseestimation.data.Device
 import org.tensorflow.lite.examples.poseestimation.ml.ModelType
@@ -60,13 +63,13 @@ import java.util.Locale
 @Composable
 fun CameraScreen(navController: NavHostController, exerciseData: String?) {
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
     var text by remember { mutableStateOf("") }
     var isVisible by remember { mutableStateOf(false) }
     var trigger by remember { mutableStateOf(false) }
 
     var timerText by remember { mutableStateOf("00:00:00") }
     var isTimerRunning by remember { mutableStateOf(false) }
-    var bdrColor by remember { mutableStateOf(Color.Red) }
 
     var cameraSource by remember { mutableStateOf<CameraSource?>(null) }
     var poseDetector by remember { mutableStateOf<PoseDetector?>(null) }
@@ -78,17 +81,22 @@ fun CameraScreen(navController: NavHostController, exerciseData: String?) {
     }
 
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = { isGranted->
-            hasCameraPermission = isGranted
-            if(isGranted){
-                openCamera(context)
-            }
-            else{
-                Toast.makeText(context, "Camera permission denied", Toast.LENGTH_SHORT).show()
-            }
+        contract = ActivityResultContracts.RequestPermission()
+    ){ isGranted->
+        hasCameraPermission = isGranted
+        if(!isGranted){
+            Toast.makeText(context, "Camera permission denied", Toast.LENGTH_SHORT).show()
         }
-    )
+    }
+
+//    LaunchedEffect(hasCameraPermission) {
+//        if (hasCameraPermission) {
+//            openCamera(context, this, correct_label) { source, detector ->
+//                cameraSource = source
+//                poseDetector = detector
+//            }
+//        }
+//    }
 
     LaunchedEffect(Unit) {
         if (!hasCameraPermission) {
@@ -112,42 +120,64 @@ fun CameraScreen(navController: NavHostController, exerciseData: String?) {
     LaunchedEffect(isTimerRunning) {
         if(isTimerRunning){
             var seconds = 0
-            while(isTimerRunning){
-                val hours = seconds / 3600
-                val minutes = (seconds % 3600) / 60
-                val secs = seconds % 60
-                // %-> format specify | 0-> pads number with leading 0
-                // 2-> total width 2 | d-> formats it as an integer
-                timerText = String.format(Locale.ENGLISH,"%02d:%02d:%02d", hours, minutes, secs)
-                delay(1000L)
-                seconds++
-//                brdChange = !brdChange
+            withContext(Dispatchers.Default){
+                while(isTimerRunning){
+                    val hours = seconds / 3600
+                    val minutes = (seconds % 3600) / 60
+                    val secs = seconds % 60
+                    // %-> format specify | 0-> pads number with leading 0
+                    // 2-> total width 2 | d-> formats it as an integer
+                    val format = String.format(Locale.ENGLISH,"%02d:%02d:%02d", hours, minutes, secs)
+
+                    withContext(Dispatchers.Main){
+                        timerText = format
+                    }
+
+                    delay(1000L)
+                    seconds++
+                }
             }
         }
     }
-//
-//    LaunchedEffect(brdChange) {
-//        bdrColor = Color.Red
-//        delay(2000)
-//        bdrColor = Color.Green
-//        delay(100)
-//        bdrColor = Color.Red
-//        delay(2000)
-//        bdrColor = Color.Green
-//    }
-    Box(modifier = Modifier.fillMaxSize().border(BorderStroke(7.dp, bdrColor))){
+
+    DisposableEffect(Unit) {
+        onDispose {
+            cameraSource?.close()
+            cameraSource = null
+        }
+    }
+
+    Box(modifier = Modifier.fillMaxSize().background(Color.Blue)){
+        if(hasCameraPermission){
+            AndroidView(
+                factory = { context ->
+                    SurfaceView(context).apply {
+                        // Initialize camera source when SurfaceView is created
+                        if(cameraSource==null){
+                            openCamera(context,scope, this, correct_label) { source, detector ->
+                                cameraSource = source
+                                poseDetector = detector
+                            }
+                        }
+                    }
+                },
+                modifier = Modifier.fillMaxSize().zIndex(0f)
+            )
+        }
+
         if (isVisible) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.7f)),
+                    .background(Color.Black.copy(alpha = 0.7f))
+                    .zIndex(1f),
                 contentAlignment = Alignment.Center
             ) {
                 Text(text = text, fontSize = 35.sp, color = Color.White, fontWeight = FontWeight.Bold)
             }
         }
 
-        Column(modifier = Modifier.fillMaxWidth().padding(25.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+        Column(modifier = Modifier.fillMaxWidth().padding(25.dp).zIndex(2f), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
             Spacer(modifier = Modifier.size(50.dp))
 
             Text(text = exerciseData ?: "Exercise", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 22.sp)
@@ -157,16 +187,16 @@ fun CameraScreen(navController: NavHostController, exerciseData: String?) {
             Text(text = timerText, color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
         }
 
-        Column(modifier = Modifier.fillMaxSize().padding(25.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Bottom) {
+        // Bottom controls
+        Column(modifier = Modifier.fillMaxSize().padding(25.dp).zIndex(2f), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Bottom) {
             Text(text = "0", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 62.sp)
 
             Spacer(modifier = Modifier.size(25.dp))
 
 
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                IconButton(onClick = {
-                    trigger = true
-                },
+                IconButton(
+                    onClick = { trigger = true },
                     modifier = Modifier.size(75.dp)
                 ) {
                     Icon(
@@ -193,77 +223,49 @@ fun CameraScreen(navController: NavHostController, exerciseData: String?) {
                     }
                 }
             }
-
             Spacer(modifier = Modifier.size(15.dp))
         }
-
-//        AndroidView(
-//            factory = { context ->
-//                SurfaceView(context).apply {
-//                    // Initialize camera source when SurfaceView is created
-//                    initializeCamera(this, correct_label) { source, detector ->
-//                        cameraSource = source
-//                        poseDetector = detector
-//                    }
-//                }
-//            },
-//            modifier = Modifier.fillMaxSize()
-//        )
-
     }
 }
 
-private fun initializeCamera(
+fun openCamera(
+    context: Context,
+    scope: CoroutineScope,
     surfaceView: SurfaceView,
-    correctLabel:String,
+    correctLabel: String,
     onInitialized: (CameraSource, PoseDetector) -> Unit
 ) {
-    val context = surfaceView.context
-
-    // Create pose detector (similar to original createPoseEstimator)
     val poseDetector = MoveNet.create(context, Device.CPU, ModelType.Thunder)
 
-    // Create camera source with pose detection callbacks
     val cameraSource = CameraSource(surfaceView, object : CameraSource.CameraSourceListener {
-        override fun onFPSListener(fps: Int) {
-            // Handle FPS updates
-        }
+        override fun onFPSListener(fps: Int) {}
 
         override fun onDetectedInfo(
             personScore: Float?,
             poseLabels: List<Pair<String, Float>>?
         ) {
-            // Handle pose detection results
             poseLabels?.sortedByDescending { it.second }?.let { labels ->
                 for (label in labels) {
-                    if (correctLabel == label.first) {
-                        if (label.second >= 0.85) {
-                            // Correct pose detected - update UI to green
-                            // You'll need to pass this state back to your Compose UI
-                        } else {
-                            // Incorrect pose - update UI to red
-                        }
+                    if (correctLabel == label.first && label.second >= 0.85) {
+                        // Update UI to green
+                    } else {
+                        // Update UI to red
                     }
                 }
             }
         }
     }).apply {
         prepareCamera()
-        setDetector(poseDetector)
-        setClassifier(PoseClassifier.create(context))
+//        setDetector(poseDetector)
+//        setClassifier(PoseClassifier.create(context))
     }
 
-    // Initialize camera
-    CoroutineScope(Dispatchers.Main).launch {
+    scope.launch(Dispatchers.Main) {
         cameraSource.initCamera()
+        onInitialized(cameraSource, poseDetector)
     }
-
-    onInitialized(cameraSource, poseDetector)
 }
 
-fun openCamera(context: Context) {
-    Toast.makeText(context, "Camera open ho ja sim sim", Toast.LENGTH_SHORT).show()
-}
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

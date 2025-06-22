@@ -18,6 +18,7 @@ package org.tensorflow.lite.examples.poseestimation.camera
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.ImageFormat
 import android.graphics.Matrix
@@ -108,9 +109,15 @@ class CameraSource(
                         )
                 }
                 yuvConverter.yuvToRgb(image, imageBitmap)
+                // AS WE ARE GETTING A VERTICALLY AND HORIZONTALLY INVERTED FRONT CAM
                 // Create rotated version for portrait display
                 val rotateMatrix = Matrix()
-                rotateMatrix.postRotate(90.0f)
+
+                // FOR HORIZONTAL FLIP
+//                rotateMatrix.preScale(-1f, 1f)
+                // VERTICAL FLIP
+                rotateMatrix.postRotate(270f)
+//                rotateMatrix.preScale(-1f, 1f)
 
                 val rotatedBitmap = Bitmap.createBitmap(
                     imageBitmap, 0, 0, PREVIEW_WIDTH, PREVIEW_HEIGHT,
@@ -166,10 +173,10 @@ class CameraSource(
         for (cameraId in cameraManager.cameraIdList) {
             val characteristics = cameraManager.getCameraCharacteristics(cameraId)
 
-            // We don't use a front facing camera in this sample.
+            // We want front facing camera
             val cameraDirection = characteristics.get(CameraCharacteristics.LENS_FACING)
             if (cameraDirection != null &&
-                cameraDirection == CameraCharacteristics.LENS_FACING_FRONT
+                cameraDirection == CameraCharacteristics.LENS_FACING_BACK
             ) {
                 continue
             }
@@ -269,8 +276,8 @@ class CameraSource(
         visualize(persons, bitmap)
     }
 
+    // MODIFIED THIS CODE TO FILL THE MAX SIZE OF THE SCREEN
     private fun visualize(persons: List<Person>, bitmap: Bitmap) {
-
         val outputBitmap = VisualizationUtils.drawBodyKeypoints(
             bitmap,
             persons.filter { it.score > MIN_CONFIDENCE }, isTrackerEnabled
@@ -297,12 +304,14 @@ class CameraSource(
                 screenWidth = (canvas.height * ratio).toInt()
                 left = (canvas.width - screenWidth) / 2
             }
-            val right: Int = left + screenWidth
-            val bottom: Int = top + screenHeight
+//            val right: Int = left + screenWidth
+//            val bottom: Int = top + screenHeight
 
+            val width= Resources.getSystem().displayMetrics.widthPixels
+            val height= Resources.getSystem().displayMetrics.heightPixels
             canvas.drawBitmap(
                 outputBitmap, Rect(0, 0, outputBitmap.width, outputBitmap.height),
-                Rect(left, top, right, bottom), null
+                Rect(0, 0, width, height), null
             )
             surfaceView.holder.unlockCanvasAndPost(canvas)
         }
