@@ -7,9 +7,7 @@ import android.view.SurfaceView
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -89,15 +87,6 @@ fun CameraScreen(navController: NavHostController, exerciseData: String?) {
         }
     }
 
-//    LaunchedEffect(hasCameraPermission) {
-//        if (hasCameraPermission) {
-//            openCamera(context, this, correct_label) { source, detector ->
-//                cameraSource = source
-//                poseDetector = detector
-//            }
-//        }
-//    }
-
     LaunchedEffect(Unit) {
         if (!hasCameraPermission) {
             cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
@@ -140,6 +129,7 @@ fun CameraScreen(navController: NavHostController, exerciseData: String?) {
         }
     }
 
+    // When the screen is destroyed, close the camera source
     DisposableEffect(Unit) {
         onDispose {
             cameraSource?.close()
@@ -149,6 +139,7 @@ fun CameraScreen(navController: NavHostController, exerciseData: String?) {
 
     Box(modifier = Modifier.fillMaxSize().background(Color.Blue)){
         if(hasCameraPermission){
+            // Android view is used to integrate native android views in compose UI
             AndroidView(
                 factory = { context ->
                     SurfaceView(context).apply {
@@ -161,6 +152,7 @@ fun CameraScreen(navController: NavHostController, exerciseData: String?) {
                         }
                     }
                 },
+                // zIndex is the screen overlap parameter, 1f is above 0f and 2f is above 1f
                 modifier = Modifier.fillMaxSize().zIndex(0f)
             )
         }
