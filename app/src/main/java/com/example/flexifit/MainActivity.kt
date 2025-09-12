@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
             FlexiFitTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.foreground
                 ) {
                     val navHostController = rememberNavController()
                     NavGraph(navHostController = navHostController)
